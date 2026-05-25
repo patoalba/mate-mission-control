@@ -417,6 +417,8 @@ const PHASES = [
       { t: 'mvp', d: true,  text: 'Hardening ADK: fallback rioplatense + log estructurado por clase de error (timeout/quota/genérico)' },
       { t: 'mvp', d: true,  text: 'Hardening WhatsApp: retry exponencial 3 intentos en 429/5xx/network, no en 4xx permanentes' },
       { t: 'mvp', d: true,  text: '17 tests de WhatsApp client + 4 nuevos de fallback ADK verdes' },
+      { t: 'mvp', d: true,  text: 'Fix doble cobro Gemini: ProcessedTurnRepo (cache por wamid, TTL 7d) — re-delivery Pub/Sub no re-paga LLM' },
+      { t: 'mvp', d: true,  text: 'Venv shebangs corregidos (apuntaban a ~/Documents/Mate viejo) — pytest ahora corre full suite (187 verdes)' },
       { t: 'mvp', d: false, text: 'Alerta Cloud Logging: error rate > 5% en últimas 2h' },
       { t: 'mvp', d: false, text: '50 turnos reales del equipo + ajustar tono si no es rioplatense' },
       // Coach E1+E2
