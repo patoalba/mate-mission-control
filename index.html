@@ -1,645 +1,2019 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>mate · roadmap MVP unificado</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg:      oklch(15% 0.01 150);
-    --bg-2:    oklch(19% 0.012 150);
-    --bg-3:    oklch(23% 0.014 150);
-    --line:    oklch(30% 0.014 150);
-    --line-hi: oklch(40% 0.02 150);
-    --text:    oklch(94% 0.01 150);
-    --text-2:  oklch(72% 0.015 150);
-    --text-3:  oklch(54% 0.018 150);
-    --mate:    oklch(72% 0.17 145);
-    --mate-d:  oklch(48% 0.12 145);
-    --coach:   oklch(75% 0.13 230);
-    --coach-d: oklch(45% 0.08 230);
-    --warn:    oklch(78% 0.16 80);
-
-    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --serif: 'Instrument Serif', 'Times New Roman', serif;
-
-    --s1: clamp(0.5rem, 0.4rem + 0.2vw, 0.75rem);
-    --s2: clamp(1rem, 0.8rem + 0.5vw, 1.5rem);
-    --s3: clamp(1.5rem, 1.2rem + 1vw, 2.5rem);
-    --s4: clamp(2.5rem, 2rem + 2vw, 5rem);
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 1.55;
-    min-height: 100vh;
-  }
-  .shell {
-    max-width: 920px;
-    margin: 0 auto;
-    padding: var(--s3) var(--s2) var(--s4);
-  }
-
-  /* ── header ─────────────────────────────────────────────── */
-  header {
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: var(--s2); flex-wrap: wrap;
-    padding-bottom: var(--s2);
-    border-bottom: 1px solid var(--line);
-    margin-bottom: var(--s3);
-  }
-  .brand { display: flex; align-items: baseline; gap: 0.5rem; }
-  .brand .dot {
-    width: 0.5rem; height: 0.5rem; border-radius: 50%;
-    background: var(--mate); box-shadow: 0 0 14px var(--mate);
-  }
-  .brand .name { font-family: var(--serif); font-size: 1.5rem; }
-  .brand .sub { color: var(--text-3); font-size: 0.85rem; padding-left: 0.5rem; }
-  .meta { color: var(--text-3); font-size: 0.85rem; text-align: right; }
-  .meta strong { color: var(--text-2); font-weight: 500; }
-
-  /* ── hero ───────────────────────────────────────────────── */
-  .hero {
-    margin-bottom: var(--s3);
-  }
-  .hero h1 {
-    font-family: var(--serif);
-    font-size: clamp(2.2rem, 1.4rem + 3vw, 3.4rem);
-    margin: 0 0 0.4rem;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-  .hero h1 em { color: var(--mate); font-style: italic; }
-  .hero p {
-    color: var(--text-2);
-    max-width: 60ch;
-    margin: 0 0 var(--s2);
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--s1);
-    margin-bottom: var(--s2);
-  }
-  .stat {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 5px;
-    padding: var(--s1) var(--s2);
-  }
-  .stat .label {
-    color: var(--text-3); text-transform: uppercase;
-    letter-spacing: 0.1em; font-size: 0.68rem;
-    display: block; margin-bottom: 0.25rem;
-  }
-  .stat .v {
-    font-family: var(--serif); font-size: 1.7rem; line-height: 1;
-  }
-  .stat .v small { font-family: var(--mono); font-size: 0.8rem; color: var(--text-3); padding-left: 0.3rem; }
-  .stat.mvp .v { color: var(--mate); }
-  .stat.coach .v { color: var(--coach); }
-  .stat.global .v { color: var(--text); }
-  .stat.days .v { color: var(--warn); }
-
-  .bar {
-    height: 5px;
-    background: var(--bg-3);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 0.5rem;
-  }
-  .bar > span {
-    display: block; height: 100%;
-    background: linear-gradient(90deg, var(--mate-d), var(--mate));
-    transition: width 400ms var(--ease);
-  }
-  .bar.coach > span { background: linear-gradient(90deg, var(--coach-d), var(--coach)); }
-
-  .actions {
-    display: flex; gap: 0.5rem; flex-wrap: wrap;
-    margin-top: var(--s1);
-  }
-  .btn {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    color: var(--text-2);
-    font-family: var(--mono); font-size: 0.78rem;
-    padding: 0.4rem 0.75rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 180ms var(--ease);
-  }
-  .btn:hover { border-color: var(--mate-d); color: var(--text); }
-  .btn[aria-pressed="true"] { background: var(--mate-d); color: var(--bg); border-color: var(--mate-d); }
-  .btn.coach[aria-pressed="true"] { background: var(--coach-d); border-color: var(--coach-d); }
-
-  .filter-row {
-    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
-    margin: 0 0 var(--s2);
-    padding-top: var(--s1);
-    border-top: 1px dashed var(--line);
-  }
-  .filter-row .lbl { color: var(--text-3); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.5rem; }
-
-  /* ── phases (weeks) ────────────────────────────────────── */
-  .phases { display: flex; flex-direction: column; gap: var(--s1); }
-  .phase {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    transition: 180ms var(--ease);
-  }
-  .phase[open] { border-color: var(--line-hi); }
-  .phase.done { border-left: 3px solid var(--mate); }
-  .phase summary {
-    list-style: none;
-    cursor: pointer;
-    padding: var(--s1) var(--s2);
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: var(--s1);
-    align-items: center;
-  }
-  .phase summary::-webkit-details-marker { display: none; }
-  .phase .chev {
-    width: 0.55rem; height: 0.55rem;
-    border-right: 2px solid var(--text-3); border-bottom: 2px solid var(--text-3);
-    transform: rotate(-45deg); transition: 180ms var(--ease);
-  }
-  .phase[open] .chev { transform: rotate(45deg); border-color: var(--mate); }
-  .phase .title { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
-  .phase .title .num { color: var(--text-3); font-size: 0.72rem; letter-spacing: 0.1em; }
-  .phase .title .name { font-family: var(--serif); font-size: 1.3rem; line-height: 1.1; }
-  .phase .pmini { display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-end; }
-  .phase .pmini .pct { font-size: 0.78rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
-  .phase .pmini .bar { width: 80px; margin-top: 0; }
-
-  .phase-body {
-    padding: 0 var(--s2) var(--s2);
-    border-top: 1px dashed var(--line);
-  }
-  .phase-body .gate {
-    margin-top: var(--s2);
-    padding: var(--s1);
-    background: var(--bg-3);
-    border-left: 3px solid var(--warn);
-    border-radius: 4px;
-    color: var(--text-2);
-    font-size: 0.85rem;
-  }
-  .phase-body .gate .glabel {
-    color: var(--warn); text-transform: uppercase;
-    letter-spacing: 0.1em; font-size: 0.7rem;
-    display: block; margin-bottom: 0.25rem;
-  }
-  .phase.done .gate { border-left-color: var(--mate); }
-  .phase.done .gate .glabel { color: var(--mate); }
-
-  /* ── tasks ─────────────────────────────────────────────── */
-  .tasks { list-style: none; padding: 0; margin: var(--s1) 0 0; display: flex; flex-direction: column; gap: 0.25rem; }
-  .task {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    gap: 0.65rem;
-    align-items: start;
-    padding: 0.45rem 0.5rem;
-    border-radius: 4px;
-    transition: background 150ms var(--ease);
-  }
-  .task:hover { background: var(--bg-3); }
-  .task input[type="checkbox"] {
-    appearance: none;
-    width: 1rem; height: 1rem;
-    border: 1.5px solid var(--line-hi);
-    border-radius: 3px;
-    background: var(--bg-3);
-    cursor: pointer;
-    margin-top: 0.18rem;
-    position: relative;
-    transition: 150ms var(--ease);
-    flex-shrink: 0;
-  }
-  .task input[type="checkbox"]:hover { border-color: var(--mate-d); }
-  .task input[type="checkbox"]:checked {
-    background: var(--mate); border-color: var(--mate);
-  }
-  .task.coach input[type="checkbox"]:checked {
-    background: var(--coach); border-color: var(--coach);
-  }
-  .task input[type="checkbox"]:checked::after {
-    content: ""; position: absolute;
-    left: 0.2rem; top: 0.02rem;
-    width: 0.28rem; height: 0.55rem;
-    border-right: 2px solid var(--bg);
-    border-bottom: 2px solid var(--bg);
-    transform: rotate(45deg);
-  }
-  .task input[type="checkbox"]:checked ~ label { color: var(--text-3); text-decoration: line-through; }
-  .task .tag {
-    font-size: 0.62rem;
-    padding: 0.15rem 0.4rem;
-    border-radius: 3px;
-    background: oklch(28% 0.06 145);
-    color: var(--mate);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 0.22rem;
-    height: fit-content;
-    flex-shrink: 0;
-  }
-  .task.coach .tag { background: oklch(28% 0.05 230); color: var(--coach); }
-  .task label {
-    cursor: pointer;
-    font-size: 0.88rem;
-    line-height: 1.4;
-    color: var(--text);
-  }
-  .phase.hidden, .task.hidden { display: none; }
-
-  footer {
-    margin-top: var(--s3);
-    padding-top: var(--s2);
-    border-top: 1px solid var(--line);
-    color: var(--text-3);
-    font-size: 0.78rem;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--s1);
-  }
-  footer code {
-    background: var(--bg-3);
-    padding: 0.1rem 0.4rem;
-    border-radius: 3px;
-    color: var(--text-2);
-  }
-
-  @media print {
-    body { background: white; color: black; }
-    .btn, .filter-row, .stat .bar { display: none; }
-    .phase, .stat { background: white; border: 1px solid #999; }
-    .phase { break-inside: avoid; page-break-inside: avoid; }
-    .phase[open] .chev { display: none; }
-    .phases .phase { display: block !important; }
-    .task { display: grid !important; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mate · Mission Control — Panel de Arquitectura y Pipelines</title>
+  
+  <!-- Fuentes e íconos premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reset & Core tokens */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --green-dark: #1F3D2E;
+      --green-forest: #3F8C5C;
+      --sage: #7BA48B;
+      --cream-dark: #EDEAE4;
+      --cream-light: #FBF9F6;
+      --amber: #E89B3C;
+      --amber-light: #FEF3E2;
+      --blue: #4A6FA5;
+      --blue-light: #EBF0F8;
+      --ink: #1F3D2E;
+      --soft: #5A6B5E;
+      --muted: #9AA89E;
+      --border: #D9CFB6;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(31, 61, 46, 0.1);
+      
+      --shadow-sm: 0 2px 4px rgba(31, 61, 46, 0.05);
+      --shadow-md: 0 8px 16px rgba(31, 61, 46, 0.08);
+      --shadow-lg: 0 16px 32px rgba(31, 61, 46, 0.12);
+      
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    
+    body {
+      background: var(--cream-dark);
+      font-family: var(--font-sans);
+      color: var(--ink);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Layout */
+    .app-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar Navigation */
+    aside {
+      background: var(--green-dark);
+      color: #F4ECD8;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 3rem;
+    }
+    
+    .logo-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      color: var(--cream-dark);
+    }
+    
+    .logo-sub {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.6;
+    }
+    
+    .menu-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .menu-item {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(244, 236, 216, 0.7);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    
+    .menu-item:hover, .menu-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
+    
+    .menu-item.active {
+      border-left: 3px solid var(--amber);
+      font-weight: 600;
+    }
+    
+    .menu-icon {
+      font-size: 1.1rem;
+    }
+    
+    .status-badge {
+      margin-top: auto;
+      background: rgba(63, 140, 92, 0.2);
+      border: 1px solid rgba(63, 140, 92, 0.4);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .status-pulse {
+      width: 10px;
+      height: 10px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 1.8s infinite;
+      flex-shrink: 0;
+    }
+    
+    .status-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #8adea0;
+    }
+    
+    /* Main Content */
+    main {
+      padding: 2.5rem 3rem;
+      overflow-y: auto;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .header-title h1 {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 500;
+      color: var(--green-dark);
+      margin-bottom: 0.25rem;
+    }
+    
+    .header-title p {
+      color: var(--soft);
+      font-size: 0.95rem;
+    }
+    
+    .env-tag {
+      background: var(--amber-light);
+      border: 1px solid rgba(232, 155, 60, 0.3);
+      color: #A06B20;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .metric-card {
+      background: var(--glass-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--soft);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      font-family: var(--font-serif);
+    }
+    
+    .metric-trend {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 500;
+    }
+    
+    .trend-up { color: var(--green-forest); }
+    .trend-neutral { color: var(--soft); }
+    
+    /* View Card Wrappers */
+    .view-section {
+      display: none;
+      animation: fadeIn 0.35s ease both;
+    }
+    
+    .view-section.active {
+      display: block;
+    }
+    
+    .card-panel {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    .panel-header {
+      background: var(--cream-light);
+      border-bottom: 1.5px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .panel-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--green-dark);
+    }
+    
+    .panel-header p {
+      color: var(--soft);
+      font-size: 0.85rem;
+    }
+    
+    .panel-body {
+      padding: 2rem;
+    }
+    
+    /* Architecture Diagram Tab styling */
+    .arch-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+    }
+    
+    .diagram-viewport {
+      background: #FAF8F5;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      height: 580px;
+      overflow: hidden;
+    }
+    
+    /* Map Nodes */
+    .map-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .map-nodes-container {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+    
+    .arch-node {
+      position: absolute;
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    .arch-node:hover {
+      border-color: var(--green-forest);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+    }
+    
+    .arch-node.selected {
+      border-color: var(--amber);
+      background: var(--amber-light);
+      box-shadow: 0 0 10px rgba(232, 155, 60, 0.2);
+    }
+    
+    .arch-node-icon {
+      font-size: 1.2rem;
+      width: 24px;
+      height: 24px;
+      background: var(--cream-dark);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .arch-node-details {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .arch-node-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+    
+    .arch-node-type {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--soft);
+      letter-spacing: -0.2px;
+    }
+    
+    /* Node Specific Positions */
+    #node-wa     { top: 50%; left: 4%; transform: translateY(-50%); }
+    #node-ingest { top: 35%; left: 24%; }
+    #node-pubsub { top: 50%; left: 46%; transform: translateX(-50%) translateY(-50%); }
+    #node-proc   { top: 35%; left: 64%; }
+    #node-web    { top: 70%; left: 24%; }
+    #node-gcs    { top: 12%; left: 56%; }
+    #node-db     { top: 12%; left: 74%; }
+    #node-vertex { top: 35%; left: 83%; }
+    #node-index  { top: 70%; left: 64%; }
+    #node-vsearch{ top: 70%; left: 83%; }
+    
+    /* Info Panel Sidebar */
+    .arch-sidebar {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      height: 580px;
+      overflow-y: auto;
+    }
+    
+    .sidebar-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      color: var(--soft);
+      gap: 0.75rem;
+    }
+    
+    .sidebar-placeholder-icon {
+      font-size: 2rem;
+      opacity: 0.5;
+    }
+    
+    .drawer-header {
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    
+    .drawer-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--green-dark);
+    }
+    
+    .drawer-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--soft);
+      margin-top: 0.15rem;
+    }
+    
+    .drawer-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    
+    .drawer-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    
+    .drawer-value {
+      font-size: 0.85rem;
+      color: var(--ink);
+    }
+    
+    .drawer-value.tech {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+    
+    .perm-badge {
+      display: inline-block;
+      background: var(--blue-light);
+      border: 1px solid rgba(74, 111, 165, 0.2);
+      color: var(--blue);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Pipeline Simulator Tab Styling */
+    .sim-selector {
+      display: flex;
+      border: 1px solid var(--border);
+      background: var(--cream-light);
+      border-radius: 12px;
+      padding: 0.35rem;
+      gap: 0.35rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    
+    .sim-tab-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--soft);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .sim-tab-btn.active {
+      background: #FFFFFF;
+      box-shadow: var(--shadow-sm);
+      color: var(--green-dark);
+    }
+    
+    .sim-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+    }
+    
+    .sim-diagram-area {
+      background: #FAF8F5;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      height: 480px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sim-node {
+      position: absolute;
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 0.6rem 0.9rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .sim-node.active-flow {
+      border-color: var(--green-forest);
+      background: #E5F2EB;
+      box-shadow: 0 0 12px rgba(63, 140, 92, 0.25);
+    }
+    
+    .sim-node-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    
+    .sim-node-icon {
+      font-size: 1rem;
+    }
+    
+    /* Terminal Console */
+    .terminal-console {
+      background: #1e1e1e;
+      border-radius: 14px;
+      border: 1px solid #333333;
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .terminal-header {
+      background: #2d2d2d;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #3d3d3d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .terminal-buttons {
+      display: flex;
+      gap: 0.4rem;
+    }
+    
+    .terminal-btn {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .btn-red { background: #ef4444; }
+    .btn-yellow { background: #eab308; }
+    .btn-green { background: #22c55e; }
+    
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #9aa89e;
+      font-weight: bold;
+    }
+    
+    .terminal-body {
+      padding: 1.25rem;
+      flex-content: 1;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #e5e5e5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      height: calc(100% - 38px);
+    }
+    
+    .log-line {
+      display: flex;
+      gap: 0.75rem;
+      animation: logFadeIn 0.25s ease both;
+    }
+    
+    .log-time {
+      color: #7BA48B;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    
+    .log-text {
+      word-break: break-all;
+    }
+    
+    .log-info { color: #e5e5e5; }
+    .log-success { color: #4ade80; }
+    .log-warning { color: #facc15; }
+    .log-accent { color: #38bdf8; }
+    
+    .sim-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    
+    .btn-sim {
+      padding: 0.85rem 1.75rem;
+      background: var(--green-dark);
+      color: #F4ECD8;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+    
+    .btn-sim:hover:not(:disabled) {
+      background: var(--green-forest);
+      transform: translateY(-1px);
+    }
+    
+    .btn-sim:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Cost Tab Slider and Cards */
+    .cost-layout {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 3rem;
+    }
+    
+    .slider-box {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .slider-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--green-dark);
+    }
+    
+    .slider-val-bubble {
+      background: var(--green-dark);
+      color: #F4ECD8;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+    
+    .slider-input {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border);
+      outline: none;
+      -webkit-appearance: none;
+      accent-color: var(--green-forest);
+      margin: 1.5rem 0;
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--soft);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .ratio-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      background: white;
+    }
+    
+    .ratio-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .ratio-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    
+    .ratio-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+    
+    /* Cost Summary Sidebar */
+    .cost-sidebar {
+      background: var(--green-dark);
+      color: #F4ECD8;
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .cost-sb-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.75rem;
+    }
+    
+    .cost-total-box {
+      text-align: center;
+      padding: 1.5rem 0;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cost-total-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.6;
+    }
+    
+    .cost-total-value {
+      font-size: 2.8rem;
+      font-weight: 700;
+      font-family: var(--font-serif);
+      color: var(--amber);
+      margin: 0.25rem 0;
+    }
+    
+    .cost-item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .cost-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+    }
+    
+    .cost-item-name {
+      opacity: 0.85;
+    }
+    
+    .cost-item-val {
+      font-family: var(--font-mono);
+      font-weight: bold;
+    }
+    
+    .cost-note {
+      font-size: 0.7rem;
+      opacity: 0.5;
+      text-align: center;
+      line-height: 1.4;
+      margin-top: 1rem;
+    }
+    
+    /* Directory Stack styling */
+    .stack-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2.5rem;
+    }
+    
+    .stack-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .stack-nav-btn {
+      padding: 0.85rem 1.25rem;
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--soft);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    
+    .stack-nav-btn:hover, .stack-nav-btn.active {
+      background: var(--green-dark);
+      color: #F4ECD8;
+      border-color: var(--green-dark);
+    }
+    
+    .stack-content-pane {
+      background: var(--cream-light);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      min-height: 480px;
+    }
+    
+    .stack-pane-detail {
+      display: none;
+      animation: fadeIn 0.25s ease both;
+    }
+    
+    .stack-pane-detail.active {
+      display: block;
+    }
+    
+    .pane-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--green-dark);
+      margin-bottom: 0.75rem;
+    }
+    
+    .pane-sub {
+      color: var(--soft);
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stack-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .stack-info-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    
+    .sic-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--green-forest);
+      margin-bottom: 0.4rem;
+    }
+    
+    .sic-body {
+      font-size: 0.8rem;
+      color: var(--soft);
+    }
+    
+    .code-snippet {
+      background: #1F3D2E;
+      color: #c7d2c1;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 0.75rem;
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes logFadeIn {
+      from { opacity: 0; transform: translateX(-4px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      aside {
+        display: none; /* simple hidden for small layout in branding docs */
+      }
+      .arch-layout, .sim-layout, .cost-layout, .stack-layout {
+        grid-template-columns: 1fr;
+      }
+      .arch-sidebar, .terminal-console, .cost-sidebar {
+        height: auto;
+      }
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
-<main class="shell">
 
-  <header>
-    <div class="brand">
-      <span class="dot"></span>
-      <span class="name">mate</span>
-      <span class="sub">roadmap MVP · 30 días</span>
+<div class="app-container">
+  
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside>
+    <div class="logo-container">
+      <div class="logo-title">Mate</div>
+      <div class="logo-sub">Mission Control</div>
     </div>
-    <div class="meta">
-      <div><strong id="todayLabel"></strong></div>
-      <div id="daysToLaunch"></div>
+    
+    <ul class="menu-nav">
+      <li class="menu-item active" onclick="switchView('overview-section', this)">
+        <span class="menu-icon">🏢</span>
+        <span>GCP Topología Map</span>
+      </li>
+      <li class="menu-item" onclick="switchView('pipeline-section', this)">
+        <span class="menu-icon">⚡</span>
+        <span>Simulador Pipelines</span>
+      </li>
+      <li class="menu-item" onclick="switchView('costs-section', this)">
+        <span class="menu-icon">📊</span>
+        <span>Monitor de Costos</span>
+      </li>
+      <li class="menu-item" onclick="switchView('stack-section', this)">
+        <span class="menu-icon">📂</span>
+        <span>Stack & Directorios</span>
+      </li>
+    </ul>
+    
+    <div class="status-badge">
+      <div class="status-pulse"></div>
+      <div class="status-text">Production Online</div>
     </div>
-  </header>
-
-  <section class="hero">
-    <h1>De cero a <em>3 usuarios</em> en producción</h1>
-    <p>
-      MVP del 9 may al 8 jun: el agente Mateo operativo + el sub-agente
-      Mate Coach (onboarding). Una sola vista, una sola fuente de verdad,
-      checkbox y listo.
-    </p>
-
-    <div class="stats">
-      <div class="stat global">
-        <span class="label">progreso global</span>
-        <span class="v"><span id="pctGlobal">0</span><small>%</small></span>
-        <div class="bar"><span id="barGlobal" style="width:0%"></span></div>
+  </aside>
+  
+  <!-- CONTENIDO PRINCIPAL -->
+  <main>
+    <header>
+      <div class="header-title">
+        <h1 id="view-title-label">GCP Topología de Infraestructura</h1>
+        <p id="view-subtitle-label">Monitoreo estructural y flujo lógico de servicios de Mate AI en producción.</p>
       </div>
-      <div class="stat mvp">
-        <span class="label">mvp</span>
-        <span class="v"><span id="pctMvp">0</span><small>%</small></span>
-        <div class="bar"><span id="barMvp" style="width:0%"></span></div>
+      <span class="env-tag">Google Cloud</span>
+    </header>
+    
+    <!-- TARJETAS DE MÉTRICAS (VISIÓN RÁPIDA) -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>SLA Latencia</span>
+          <span>Target</span>
+        </div>
+        <div class="metric-value">2.4s</div>
+        <div class="metric-trend trend-up">
+          <span>✓</span> <span>p95 &lt; 5.0s OK</span>
+        </div>
       </div>
-      <div class="stat coach">
-        <span class="label">coach</span>
-        <span class="v"><span id="pctCoach">0</span><small>%</small></span>
-        <div class="bar coach"><span id="barCoach" style="width:0%"></span></div>
+      
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Servicios Cloud Run</span>
+          <span>Estado</span>
+        </div>
+        <div class="metric-value">3 / 4</div>
+        <div class="metric-trend trend-up">
+          <span>🟢</span> <span>Indexer pendiente</span>
+        </div>
       </div>
-      <div class="stat days">
-        <span class="label">al lanzamiento</span>
-        <span class="v"><span id="daysLeft">0</span><small>d</small></span>
+      
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Avance Roadmap</span>
+          <span>Semana 3</span>
+        </div>
+        <div class="metric-value">44 / 92</div>
+        <div class="metric-trend trend-neutral">
+          <span>🔄</span> <span>48% MVP completado</span>
+        </div>
       </div>
-    </div>
-
-    <div class="filter-row">
-      <span class="lbl">ver</span>
-      <button class="btn" data-filter="all" aria-pressed="true">todo</button>
-      <button class="btn" data-filter="pending">pendientes</button>
-      <button class="btn" data-filter="done">completados</button>
-      <button class="btn" data-filter="mvp">solo mvp</button>
-      <button class="btn coach" data-filter="coach">solo coach</button>
-      <button class="btn" id="resetBtn" style="margin-left:auto;">reset</button>
-    </div>
-  </section>
-
-  <section class="phases" id="phases"></section>
-
-  <footer>
-    <span>Mate AI · roadmap unificado MVP + Coach Wave 1</span>
-    <span>Progreso en <code>localStorage</code> · borrá cache para empezar de cero</span>
-  </footer>
-
-</main>
+      
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Costo MAU</span>
+          <span>Actual</span>
+        </div>
+        <div class="metric-value" id="top-card-cost-value">$1.85</div>
+        <div class="metric-trend trend-up">
+          <span>✓</span> <span>Proyección 50 usuarios</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ==================== VISTA 1: TOPOLOGÍA GCP ==================== -->
+    <section id="overview-section" class="view-section active">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Mapa Arquitectónico</h2>
+            <p>Hacé clic en cualquier componente para inspeccionar sus recursos de IAM, límites de CPU/Memoria y secretos.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="arch-layout">
+            
+            <!-- Viewport del diagrama -->
+            <div class="diagram-viewport" id="viewport">
+              <svg class="map-svg" id="svg-connections">
+                <!-- SVG lines will be drawn here dynamically on load by JS to ensure perfect position -->
+              </svg>
+              
+              <div class="map-nodes-container">
+                <!-- WhatsApp Entry Node -->
+                <div class="arch-node" id="node-wa" onclick="selectNode('wa')">
+                  <div class="arch-node-icon">📱</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">WhatsApp API</span>
+                    <span class="arch-node-type">Canal Entrada</span>
+                  </div>
+                </div>
+                
+                <!-- Cloud Run Ingest Node -->
+                <div class="arch-node" id="node-ingest" onclick="selectNode('ingest')">
+                  <div class="arch-node-icon">📦</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">ingest</span>
+                    <span class="arch-node-type">Cloud Run</span>
+                  </div>
+                </div>
+                
+                <!-- Pub/Sub Messages -->
+                <div class="arch-node" id="node-pubsub" onclick="selectNode('pubsub')">
+                  <div class="arch-node-icon">⚡</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">incoming-messages</span>
+                    <span class="arch-node-type">Pub/Sub Topic</span>
+                  </div>
+                </div>
+                
+                <!-- Cloud Run Processor Node -->
+                <div class="arch-node" id="node-proc" onclick="selectNode('proc')">
+                  <div class="arch-node-icon">📦</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">processor</span>
+                    <span class="arch-node-type">Cloud Run</span>
+                  </div>
+                </div>
+                
+                <!-- Web Node Nextjs -->
+                <div class="arch-node" id="node-web" onclick="selectNode('web')">
+                  <div class="arch-node-icon">🌐</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">web Dashboard</span>
+                    <span class="arch-node-type">Next.js Cloud Run</span>
+                  </div>
+                </div>
+                
+                <!-- GCS Storage -->
+                <div class="arch-node" id="node-gcs" onclick="selectNode('gcs')">
+                  <div class="arch-node-icon">🪣</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">mate-media-prod</span>
+                    <span class="arch-node-type">Cloud Storage</span>
+                  </div>
+                </div>
+                
+                <!-- Firestore DB -->
+                <div class="arch-node" id="node-db" onclick="selectNode('db')">
+                  <div class="arch-node-icon">🔥</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Firestore Native</span>
+                    <span class="arch-node-type">Colecciones</span>
+                  </div>
+                </div>
+                
+                <!-- Vertex AI Engine -->
+                <div class="arch-node" id="node-vertex" onclick="selectNode('vertex')">
+                  <div class="arch-node-icon">🧠</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Mateo Agent</span>
+                    <span class="arch-node-type">Vertex AI Engine</span>
+                  </div>
+                </div>
+                
+                <!-- Indexer Node -->
+                <div class="arch-node" id="node-index" onclick="selectNode('indexer')">
+                  <div class="arch-node-icon">⚙️</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">indexer (RAG)</span>
+                    <span class="arch-node-type">Cloud Run (F3)</span>
+                  </div>
+                </div>
+                
+                <!-- Vector Search -->
+                <div class="arch-node" id="node-vsearch" onclick="selectNode('vsearch')">
+                  <div class="arch-node-icon">🔍</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Vector Search</span>
+                    <span class="arch-node-type">Vertex AI Index</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Barra lateral de detalles -->
+            <div class="arch-sidebar" id="drawer-container">
+              <div class="sidebar-placeholder" id="drawer-placeholder">
+                <div class="sidebar-placeholder-icon">📍</div>
+                <h3>Inspeccionar Recurso</h3>
+                <p>Hacé clic en cualquier nodo para ver su configuración, permisos de GCP y dependencias.</p>
+              </div>
+              
+              <div id="drawer-content" style="display:none;" class="drawer-section">
+                <div class="drawer-header">
+                  <div class="drawer-title" id="dr-title">ingest</div>
+                  <div class="drawer-subtitle" id="dr-type">Cloud Run Service</div>
+                </div>
+                
+                <div class="drawer-section">
+                  <div class="drawer-label">Propósito y Responsabilidad</div>
+                  <div class="drawer-value" id="dr-desc">Verifica webhook WhatsApp y publica a Pub/Sub.</div>
+                </div>
+                
+                <div class="drawer-section" id="dr-spec-box">
+                  <div class="drawer-label">Especificaciones del Runtime</div>
+                  <div class="drawer-value tech" id="dr-spec">Memory: 512MB · Timeout: 60s</div>
+                </div>
+                
+                <div class="drawer-section" id="dr-sa-box">
+                  <div class="drawer-label">Service Account de GCP</div>
+                  <div class="drawer-value tech" id="dr-sa">mate-prod-ingest-sa</div>
+                </div>
+                
+                <div class="drawer-section" id="dr-perm-box">
+                  <div class="drawer-label">Permisos IAM Críticos (Least-Privilege)</div>
+                  <div id="dr-perms">
+                    <span class="perm-badge">pubsub.publisher</span>
+                    <span class="perm-badge">logging.logWriter</span>
+                  </div>
+                </div>
+                
+                <div class="drawer-section" id="dr-secret-box">
+                  <div class="drawer-label">Secretos en Secret Manager</div>
+                  <div id="dr-secrets">
+                    <span class="perm-badge">whatsapp-app-secret</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ==================== VISTA 2: SIMULADOR PIPELINES ==================== -->
+    <section id="pipeline-section" class="view-section">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Simulador de Pipeline en Tiempo Real</h2>
+            <p>Seleccioná un flujo y hace click en "Simular Flujo" para visualizar los paquetes de datos y la traza de logs del sistema.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="sim-selector">
+            <button class="sim-tab-btn active" id="sim-btn-chat" onclick="selectSimMode('chat')">💬 Loop Conversacional (Chat)</button>
+            <button class="sim-tab-btn" id="sim-btn-drive" onclick="selectSimMode('drive')">📁 Onboarding Google Drive (RAG)</button>
+          </div>
+          
+          <div class="sim-layout">
+            <!-- Área visual del flujo -->
+            <div class="sim-diagram-area" id="sim-canvas">
+              <svg class="map-svg" id="svg-sim-connections">
+                <!-- SVG lines for simulator -->
+              </svg>
+              
+              <div id="sim-nodes-wrap">
+                <!-- Nodos se acomodan dinámicamente -->
+              </div>
+              
+              <!-- Elemento pulsor de datos animado -->
+              <div id="data-pulse-dot" style="position:absolute; width:12px; height:12px; background:var(--amber); border-radius:50%; box-shadow:0 0 10px var(--amber); display:none; z-index:100; transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);"></div>
+            </div>
+            
+            <!-- Terminal console -->
+            <div class="terminal-console">
+              <div class="terminal-header">
+                <div class="terminal-buttons">
+                  <div class="terminal-btn btn-red"></div>
+                  <div class="terminal-btn btn-yellow"></div>
+                  <div class="terminal-btn btn-green"></div>
+                </div>
+                <span class="terminal-title">MATEAI_SYSTEM_LOGS</span>
+              </div>
+              <div class="terminal-body" id="terminal-body">
+                <div class="log-line">
+                  <span class="log-time">[15:30:40]</span>
+                  <span class="log-text log-warning">Esperando simulación... Pulsa el botón "Iniciar Simulación" para ver la traza.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="sim-controls">
+            <span style="font-size:0.85rem; color:var(--soft);">Tiempo estimado de extremo a extremo: <strong id="sim-eta">~2.5s (p95)</strong></span>
+            <button class="btn-sim" id="btn-trigger-sim" onclick="runPipelineSimulation()">⚡ Iniciar Simulación</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ==================== VISTA 3: PROYECCIÓN DE COSTOS ==================== -->
+    <section id="costs-section" class="view-section">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Simulador y Monitor Financiero (GCP & Vertex AI)</h2>
+            <p>Calcula el costo del consumo de nube mensual en producción variando la cantidad de Usuarios Activos (MAUs).</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="cost-layout">
+            
+            <!-- Controles deslizantes -->
+            <div>
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span class="slider-title">Volumen de Usuarios (MAUs)</span>
+                  <span class="slider-val-bubble" id="mau-bubble">50 MAU</span>
+                </div>
+                <input type="range" min="10" max="2500" value="50" class="slider-input" id="mau-slider" oninput="updateCosts(this.value)" />
+                <div class="slider-labels">
+                  <span>10 MAU</span>
+                  <span>100</span>
+                  <span>500</span>
+                  <span>1,000</span>
+                  <span>2,500 MAU</span>
+                </div>
+              </div>
+              
+              <div class="ratio-box" style="margin-bottom: 2rem;">
+                <div class="ratio-col">
+                  <span class="ratio-label">Gemini 2.5 Flash Ratio</span>
+                  <span class="ratio-value" style="color: var(--green-forest)">70% de las invocaciones</span>
+                  <p style="font-size:0.75rem; color:var(--soft); margin-top: 0.25rem;">Usado en webhook, clasificación, transcripción de audios e intenciones rápidas.</p>
+                </div>
+                <div class="ratio-col" style="border-left: 1px solid var(--border); padding-left: 1.5rem;">
+                  <span class="ratio-label">Gemini 2.5 Pro Ratio</span>
+                  <span class="ratio-value" style="color: var(--amber)">30% de las invocaciones</span>
+                  <p style="font-size:0.75rem; color:var(--soft); margin-top: 0.25rem;">Invocado para razonamiento complejo de tools, análisis de imágenes y RAG avanzado.</p>
+                </div>
+              </div>
+              
+              <div class="slider-box" style="background:#FFFFFF; border-style:dashed;">
+                <div class="slider-title" style="margin-bottom:0.75rem;">Métricas de Ingesta Asumidas por Usuario / Mes</div>
+                <div style="font-size:0.85rem; display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; color:var(--soft)">
+                  <span>🗣 <strong>Conversación:</strong> 40 turnos de chat / mes</span>
+                  <span>📂 <strong>Onboarding Drive:</strong> 25 archivos / mes</span>
+                  <span>🎙 <strong>Audio WhatsApp:</strong> 12 transcripciones / mes</span>
+                  <span>🔍 <strong>RAG Vectorial:</strong> 15 consultas de búsqueda</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Detalle financiero -->
+            <div class="cost-sidebar">
+              <span class="cost-sb-title">Proyección de Costos de GCP</span>
+              
+              <div class="cost-total-box">
+                <span class="cost-total-label">Costo Mensual Estimado</span>
+                <div class="cost-total-value" id="cost-total">$1.85</div>
+                <span style="font-size:0.75rem; opacity:0.75;" id="cost-per-user">Equivale a ~$0.037 / usuario</span>
+              </div>
+              
+              <div class="cost-item-list">
+                <div class="cost-item">
+                  <span class="cost-item-name">Gemini API (Flash & Pro)</span>
+                  <span class="cost-item-val" id="cost-llm">$0.45</span>
+                </div>
+                <div class="cost-item">
+                  <span class="cost-item-name">Cloud Run Compute (Services)</span>
+                  <span class="cost-item-val" id="cost-run">$0.60</span>
+                </div>
+                <div class="cost-item">
+                  <span class="cost-item-name">Firestore Native Reads/Writes</span>
+                  <span class="cost-item-val" id="cost-db">$0.25</span>
+                </div>
+                <div class="cost-item">
+                  <span class="cost-item-name">Vertex Vector Search Index</span>
+                  <span class="cost-item-val" id="cost-search">$0.40</span>
+                </div>
+                <div class="cost-item">
+                  <span class="cost-item-name">Cloud Storage / PubSub / Logging</span>
+                  <span class="cost-item-val" id="cost-storage">$0.15</span>
+                </div>
+              </div>
+              
+              <div class="cost-note">
+                Los costos reales pueden variar en base a cold-starts de Cloud Run y longitudes de archivos indexados de Drive.
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ==================== VISTA 4: STACK & DIRECTORIOS ==================== -->
+    <section id="stack-section" class="view-section">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Tecnologías, Directorios y Modelos de Datos</h2>
+            <p>Explorá el diseño de las bases de datos de Firestore, estructura del monorepo y secrets configurados.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="stack-layout">
+            
+            <nav class="stack-nav">
+              <button class="stack-nav-btn active" onclick="switchStackTab('stack-fs', this)">🔥 Firestore Colecciones</button>
+              <button class="stack-nav-btn" onclick="switchStackTab('stack-dirs', this)">📂 Estructura del Proyecto</button>
+              <button class="stack-nav-btn" onclick="switchStackTab('stack-sec', this)">🔐 Contenedores de Secretos</button>
+            </nav>
+            
+            <div class="stack-content-pane">
+              <!-- Firestore Native models -->
+              <div class="stack-pane-detail active" id="stack-fs">
+                <span class="pane-title">Modelado de Datos (Firestore Native)</span>
+                <p class="pane-sub">Definiciones de colecciones y convenciones de seguridad por usuario (Namespacing).</p>
+                
+                <div class="drawer-section">
+                  <div class="drawer-label">Colección Principal: users/{userId}</div>
+                  <div class="drawer-value tech">
+                    <strong>Campos Clave:</strong><br>
+                    - id: UID del usuario (Firebase/FastAPI OAuth)<br>
+                    - phoneE164: Número WhatsApp (ej. "+54911...") para ruteo.<br>
+                    - onboardingState: "started" | "completed" | "drive_indexing".<br>
+                    - registeredAt: timestamp de creación.
+                  </div>
+                </div>
+                
+                <div class="stack-info-grid">
+                  <div class="stack-info-card">
+                    <span class="sic-title">establishments / plots</span>
+                    <p class="sic-body">Representa los campos y lotes asociados. plots contiene geometría (KML/coordenadas) e históricos de cultivo. soft-deleted en backend.</p>
+                  </div>
+                  <div class="stack-info-card">
+                    <span class="sic-title">logEntries / reminders</span>
+                    <p class="sic-body">Bitácora de campo que rellena el usuario (WhatsApp) y agenda de recordatorios disparada por Cloud Scheduler cada 5 min.</p>
+                  </div>
+                  <div class="stack-info-card">
+                    <span class="sic-title">conversations/{userId}</span>
+                    <p class="sic-body">Historial resumido de la conversación (rolling summary) de hasta 2000 caracteres. Protegido rigurosamente mediante firestore.rules.</p>
+                  </div>
+                  <div class="stack-info-card">
+                    <span class="sic-title">documents/{documentId}</span>
+                    <p class="sic-body">Metadata de archivos indexados por RAG (Drive, emails o adjuntos). Almacena el contentHash de idempotencia y el gcsPath.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Directorios -->
+              <div class="stack-pane-detail" id="stack-dirs">
+                <span class="pane-title">Topología de Directorios del Monorepo</span>
+                <p class="pane-sub">La separación entre `mate-infra` (IaC) y `mateai` (código de los microservicios).</p>
+                
+                <div class="code-snippet">
+📂 ~/Documents/Mate/
+├── 📄 CLAUDE.md              # Convenios de desarrollo globales
+├── 📂 mate-infra/            # Código de Terraform (Aplicado en producción)
+│   ├── 📂 terraform/
+│   │   ├── 📂 envs/prod/     # Configuración activa del entorno productivo
+│   │   └── 📂 modules/       # Módulos Cloud Run, Firestore, PubSub, IAM, Vertex
+│   └── 📄 firestore.rules    # Reglas de seguridad basadas en UID del usuario
+└── 📂 mateai/                # Monorepo de lógica de Mateo
+    ├── 📄 pyproject.toml     # Gestión de dependencias general (uv)
+    ├── 📂 domain/            # Modelos de dominio Pydantic v2 compartidos
+    ├── 📂 agent/             # System instruction, prompts y herramientas del LLM
+    └── 📂 services/
+        ├── 📂 ingest/        # FastAPI Webhook, firma HMAC y ruteo a PubSub
+        ├── 📂 processor/     # Invocación a Vertex AI Agent, ejecución de tools
+        └── 📂 indexer/       # Pipeline batch (Document AI + embeddings)
+                </div>
+              </div>
+              
+              <!-- Secretos -->
+              <div class="stack-pane-detail" id="stack-sec">
+                <span class="pane-title">Gestión de Secretos (Secret Manager)</span>
+                <p class="pane-sub">Secrets aprovisionados y mapeados de forma segura como variables de entorno a los pods de Cloud Run sin keys físicas.</p>
+                
+                <div style="display:flex; flex-direction:column; gap:1rem;">
+                  <div class="stack-info-card">
+                    <span class="sic-title">whatsapp-access-token & whatsapp-app-secret</span>
+                    <p class="sic-body">Token permanente e identificación HMAC provistos por Meta for Developers para validar firmas webhooks de WhatsApp y responder mensajes.</p>
+                  </div>
+                  <div class="stack-info-card">
+                    <span class="sic-title">jwt-signing-key</span>
+                    <p class="sic-body">Llave criptográfica de 32+ bytes para la firma de Magic Links e inicio de sesión seguro en el dashboard de Next.js (`web` service).</p>
+                  </div>
+                  <div class="stack-info-card">
+                    <span class="sic-title">mate-drive-sa-key</span>
+                    <p class="sic-body">Llave de la cuenta de servicio con permisos delegados para conectarse a Drive API en nombre del usuario (Sincronizador RAG).</p>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+  </main>
+</div>
 
 <script>
-const TODAY = new Date('2026-05-24');
-const LAUNCH = new Date('2026-06-08');
-
-/* Una sola fuente de verdad: 4 fases, cada task tiene track (mvp|coach) y done inicial. */
-const PHASES = [
-  {
-    id: 'P1', num: 'fase 01 · 9-15 may',
-    name: 'ADK Core + Tools',
-    gate: 'Mensaje WhatsApp dispara create_log_entry. 25+ evals verdes.',
-    tasks: [
-      { t: 'mvp', d: true,  text: 'google-adk en pyproject + LlmAgent con system_prompt' },
-      { t: 'mvp', d: true,  text: 'run_turn(text, context) → {reply, tool_calls}' },
-      { t: 'mvp', d: true,  text: 'Tool create_log_entry → LogEntryRepo.upsert real' },
-      { t: 'mvp', d: true,  text: 'Tool search_log_entries con filtros (kind, plot_id, fecha)' },
-      { t: 'mvp', d: true,  text: 'Tool schedule_reminder → ReminderRepo.upsert' },
-      { t: 'mvp', d: true,  text: '25 casos en evals/cases.yaml (multi-turn, tool errors, rioplatense)' },
-    ]
-  },
-  {
-    id: 'P2', num: 'fase 02 · 16-22 may',
-    name: 'Pipeline + Deploy',
-    gate: 'Smoke test con número real, p95 < 5s en prod, logs en Cloud Logging.',
-    tasks: [
-      { t: 'mvp', d: true,  text: 'Pipeline end-to-end: loadConversation → run_turn → persistTurn' },
-      { t: 'mvp', d: true,  text: 'Propagar wamid via session state para idempotency keys' },
-      { t: 'mvp', d: true,  text: '31 tests de integración del pipeline verdes' },
-      { t: 'mvp', d: true,  text: 'Deploy processor revisión 00005-d9s en prod' },
-      { t: 'mvp', d: true,  text: 'MediaClient.download_and_store (Meta URL → GCS, TTL 5min)' },
-      { t: 'mvp', d: true,  text: '11 tests de media (unitarios + integración) verdes' },
-      { t: 'mvp', d: true,  text: 'Pub/Sub push endpoint → URL de servicio (no revisión)' },
-      { t: 'mvp', d: false, text: 'Smoke test E2E con número real de WhatsApp del equipo' },
-      { t: 'mvp', d: false, text: 'Verificar logs estructurados con trace IDs en Cloud Logging' },
-      { t: 'mvp', d: false, text: 'Medir p95 < 5s en Cloud Run metrics' },
-    ]
-  },
-  {
-    id: 'P3', num: 'fase 03 · 23-29 may',
-    name: 'Onboarding Drive + Coach (modelo y router)',
-    gate: 'Gate A coach (28-may): KnowledgeProfile + router en main, tests verdes. Onboarding Drive funciona end-to-end con carpeta real.',
-    tasks: [
-      // MVP Drive onboarding
-      { t: 'mvp', d: true,  text: 'Crear SA mate-onboarding + key en Secret Manager' },
-      { t: 'mvp', d: true,  text: 'drive_reader.list_files + download (50 archivos máx)' },
-      { t: 'mvp', d: true,  text: 'knowledge_extractor con Gemini Flash (PDF, CSV, txt, XLSX, imgs)' },
-      { t: 'mvp', d: true,  text: 'Solo poblar Firestore con facts confidence >= 0.7' },
-      { t: 'mvp', d: true,  text: 'profile_populator crea Establishment + Plots + LogEntries' },
-      { t: 'mvp', d: true,  text: 'wow_message para primer contacto personalizado' },
-      { t: 'mvp', d: true,  text: '28 tests de onboarding verdes' },
-      { t: 'mvp', d: false, text: 'Smoke E2E con carpeta Drive real (cierra Gate A)' },
-      { t: 'mvp', d: false, text: 'Hardening: fallback si ADK falla, retry con backoff WhatsApp' },
-      { t: 'mvp', d: false, text: 'Alerta Cloud Logging: error rate > 5% en últimas 2h' },
-      { t: 'mvp', d: false, text: '50 turnos reales del equipo + ajustar tono si no es rioplatense' },
-      // Coach E1+E2
-      { t: 'coach', d: true,  text: 'KnowledgeProfile Pydantic + extensión User.onboardingState' },
-      { t: 'coach', d: true,  text: 'firestore.rules para knowledgeProfile + KnowledgeProfileRepo' },
-      { t: 'coach', d: true,  text: 'onboarding_schema.yaml v1 (6 categorías, weights=100)' },
-      { t: 'coach', d: true,  text: 'knowledge_score.py: compute_score + next_gap (puro Python)' },
-      { t: 'coach', d: true,  text: '10+ tests del score engine (boundaries L0-L4)' },
-      { t: 'coach', d: true,  text: 'agent_router.py: AgentChoice + select_agent (función pura)' },
-      { t: 'coach', d: true,  text: 'Comando "saltar onboarding" → opted_out' },
-      { t: 'coach', d: true,  text: 'Integrar router en _process_message + fallback a Mateo ops' },
-      { t: 'coach', d: true,  text: '8 tests del router (boundaries 39/40, 79/80, opt-out)' },
-    ]
-  },
-  {
-    id: 'P4', num: 'fase 04 · 30 may - 8 jun',
-    name: 'Coach + Lanzamiento 3 usuarios',
-    gate: 'Gate B coach (02-jun) → Gate C coach (06-jun) → MVP lanzamiento (08-jun). 30+ LogEntries reales, p95 < 5s, 0 errores de datos.',
-    tasks: [
-      // Coach E3
-      { t: 'coach', d: false, text: 'coach_system_prompt.md (rioplatense, sin inventar)' },
-      { t: 'coach', d: false, text: 'LlmAgent mateo_coach registrado en agent.py (Flash)' },
-      { t: 'coach', d: false, text: 'Tool get_knowledge_gap (.yaml + .py + tests)' },
-      { t: 'coach', d: false, text: 'Tool record_user_fact (.yaml + .py + tests)' },
-      { t: 'coach', d: false, text: 'Tool present_level_up (.yaml + .py + tests)' },
-      { t: 'coach', d: false, text: 'Tool start_drive_share (.yaml + .py + tests)' },
-      { t: 'coach', d: false, text: '5 casos seed en evals/coach_cases.yaml' },
-      // Coach E4+E5
-      { t: 'coach', d: false, text: 'Greeting flow: nuevo user → coach se presenta + button Drive/sin Drive' },
-      { t: 'coach', d: false, text: 'Handoff a SA-shared-folder con instrucciones claras' },
-      { t: 'coach', d: false, text: 'Hook _persist_mutations: recompute score + enqueue level-up' },
-      { t: 'coach', d: false, text: 'Copy de level-up por nivel (L0→L1→L2→L3→L4)' },
-      { t: 'coach', d: false, text: '4 tests cruce de umbral (19→21, 39→41, 59→61, 79→81)' },
-      // Coach E6
-      { t: 'coach', d: false, text: 'jobs/onboarding_nudges.py + endpoint OIDC' },
-      { t: 'coach', d: false, text: 'Terraform: Cloud Scheduler daily 13:00 ART' },
-      { t: 'coach', d: false, text: 'Anti-spam: 1 cada 3 días, opt-out, skip si score>=80' },
-      // Coach E7
-      { t: 'coach', d: false, text: 'whatsapp.send_interactive_list (≤10 rows) + button (≤3)' },
-      { t: 'coach', d: false, text: 'ingest webhook: list_reply / button_reply normalizados' },
-      // Coach E8
-      { t: 'coach', d: false, text: '15+ casos coach_cases.yaml (greeting, gap, level-up, opt-out, drive, router)' },
-      { t: 'coach', d: false, text: 'make eval-coach verde en CI (≥80% pass)' },
-      // Coach E9
-      { t: 'coach', d: false, text: 'Feature flag COACH_ENABLED en Secret Manager' },
-      { t: 'coach', d: false, text: 'Smoke E2E: 1 estratégico hace onboarding completo → L1' },
-      { t: 'coach', d: false, text: 'Documentar fricciones encontradas + fixes mismo día' },
-      // MVP pre-lanzamiento (operativo, no en código)
-      { t: 'mvp', d: false, text: 'Doc de 1 página para el primer usuario (tono, ejemplos, opt-out)' },
-      { t: 'mvp', d: false, text: 'Plan de comunicación de incidentes (canal + on-call informal)' },
-      { t: 'mvp', d: false, text: 'Activar versioning en bucket de tfstate para backup' },
-      // MVP lanzamiento
-      { t: 'mvp', d: false, text: 'Script onboard_user.py + Usuario 1 activado (30 may)' },
-      { t: 'mvp', d: false, text: 'Usuario 2 activado (1 jun) si Usuario 1 fue bien' },
-      { t: 'mvp', d: false, text: 'Usuario 3 activado (3 jun)' },
-      { t: 'mvp', d: false, text: 'Monitoreo activo primeros 3 días de cada usuario' },
-      { t: 'mvp', d: false, text: 'Triage diario: bugs bloqueantes fix en 24h' },
-      { t: 'mvp', d: false, text: 'usage_report.py: LogEntries/día por usuario' },
-      { t: 'mvp', d: false, text: 'Encuesta final: ¿lo usarías todos los días?' },
-      // Coach E10
-      { t: 'coach', d: false, text: 'Update CLAUDE.md raíz + mateai/CLAUDE.md con sección coach' },
-      { t: 'coach', d: false, text: 'Update RUNBOOK: cortar coach por flag, reset profile, cambiar schema' },
-    ]
-  },
-];
-
-/* ── persistence ────────────────────────────────────────── */
-const STORAGE = 'mate-roadmap-unified-v1';
-const state = (() => { try { return JSON.parse(localStorage.getItem(STORAGE)||'{}'); } catch { return {}; } })();
-const save = () => { try { localStorage.setItem(STORAGE, JSON.stringify(state)); } catch {} };
-
-function taskKey(phaseId, idx) { return `${phaseId}-${idx}`; }
-function isDone(phaseId, idx, fallback) {
-  const k = taskKey(phaseId, idx);
-  if (k in state) return state[k];
-  return fallback; // default to seeded d:true if not in state
-}
-
-/* ── render ─────────────────────────────────────────────── */
-function fmt(d) { return d.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'numeric'}); }
-function days(a,b) { return Math.round((b-a)/86400000); }
-
-document.getElementById('todayLabel').textContent = 'Hoy ' + fmt(TODAY);
-const dl = days(TODAY, LAUNCH);
-document.getElementById('daysToLaunch').textContent = dl >= 0 ? `Lanzamiento 8 jun · ${dl}d` : `Lanzamiento hace ${-dl}d`;
-document.getElementById('daysLeft').textContent = Math.max(0, dl);
-
-function phaseCounts(p, track) {
-  let total = 0, done = 0;
-  p.tasks.forEach((task, i) => {
-    if (track && task.t !== track) return;
-    total++;
-    if (isDone(p.id, i, task.d)) done++;
-  });
-  return { total, done };
-}
-
-function globalCounts(track) {
-  let total = 0, done = 0;
-  PHASES.forEach(p => {
-    const c = phaseCounts(p, track);
-    total += c.total; done += c.done;
-  });
-  return { total, done, pct: total === 0 ? 0 : Math.round(done/total*100) };
-}
-
-function renderPhases() {
-  const root = document.getElementById('phases');
-  root.innerHTML = PHASES.map(p => {
-    const { total, done } = phaseCounts(p);
-    const pct = total === 0 ? 0 : Math.round(done/total*100);
-    const isPhaseDone = pct === 100;
-    const open = !isPhaseDone || p.id === 'P3' || p.id === 'P4' ? 'open' : '';
-    return `
-      <details class="phase ${isPhaseDone?'done':''}" data-phase="${p.id}" ${open}>
-        <summary>
-          <span class="chev"></span>
-          <span class="title">
-            <span class="num">${p.num}</span>
-            <span class="name">${p.name}</span>
-          </span>
-          <span class="pmini">
-            <span class="pct"><span data-pct="${p.id}">${pct}</span>% · ${done}/${total}</span>
-            <span class="bar"><span style="width:${pct}%" data-bar="${p.id}"></span></span>
-          </span>
-        </summary>
-        <div class="phase-body">
-          <ul class="tasks">
-            ${p.tasks.map((task,i) => {
-              const k = taskKey(p.id, i);
-              const checked = isDone(p.id, i, task.d) ? 'checked' : '';
-              return `
-                <li class="task ${task.t==='coach'?'coach':''}" data-track="${task.t}">
-                  <input type="checkbox" id="${k}" data-key="${k}" data-phase="${p.id}" data-default="${task.d}" ${checked} />
-                  <span class="tag">${task.t}</span>
-                  <label for="${k}">${task.text}</label>
-                </li>
-              `;
-            }).join('')}
-          </ul>
-          ${p.gate ? `
-            <div class="gate">
-              <span class="glabel">gate · cierre de fase</span>
-              ${p.gate}
-            </div>
-          ` : ''}
-        </div>
-      </details>
-    `;
-  }).join('');
-
-  root.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', e => {
-      const k = e.target.dataset.key;
-      const phaseId = e.target.dataset.phase;
-      const def = e.target.dataset.default === 'true';
-      if (e.target.checked === def) delete state[k];
-      else state[k] = e.target.checked;
-      save();
-      updatePhase(phaseId);
-      updateStats();
-      applyFilter(currentFilter);
+  /* CONFIGURACIÓN Y BASES DE DATOS */
+  const nodeDetails = {
+    wa: {
+      title: "WhatsApp Cloud API",
+      type: "Canal y Webhook Externo",
+      desc: "Portal de comunicación con el productor agropecuario. Procesa mensajes de texto, audios de voz (notas de campo), imágenes (presencia de plagas) y coordenadas geográficas.",
+      spec: "Graph API v19.0 · HTTP POST",
+      sa: "No aplica (Servicio gestionado de Meta)",
+      perms: ["messages.receive", "messages.send"],
+      secrets: ["whatsapp-verify-token"]
+    },
+    ingest: {
+      title: "ingest",
+      type: "Cloud Run Service (Público)",
+      desc: "Recibe los webhooks entrantes de Meta. Valida la firma criptográfica HMAC SHA256 de forma inmediata y publica los payloads directamente en Pub/Sub de forma asíncrona para asegurar un SLO de latencia menor a 500ms.",
+      spec: "Memory: 512MB · CPU: 1 vCPU · min-instances: 1 · Timeout: 60s",
+      sa: "mate-prod-ingest-sa",
+      perms: ["pubsub.publisher", "logging.logWriter"],
+      secrets: ["whatsapp-app-secret", "whatsapp-verify-token"]
+    },
+    pubsub: {
+      title: "incoming-messages",
+      type: "Pub/Sub Messaging Topic",
+      desc: "Bus de mensajería asíncrona. Garantiza el orden de los mensajes utilizando como clave el número del usuario (`phoneE164`). Cuenta con una cola de mensajes no entregados (Dead Letter Queue) para aislar fallos de red.",
+      spec: "ordering=true · ack_deadline=60s · max_delivery_attempts=5",
+      sa: "Gestionado por IAM Service Agent",
+      perms: ["pubsub.subscriber", "pubsub.publisher"],
+      secrets: ["No requiere"]
+    },
+    proc: {
+      title: "processor",
+      type: "Cloud Run Service (Privado)",
+      desc: "Núcleo de orquestación conversacional de Mate. Consume mensajes en cola, descarga archivos multimedia desde Meta a Cloud Storage, invoca al Vertex AI Agent Engine y escribe el cuaderno de campo e histórico en Firestore.",
+      spec: "Memory: 1GB · CPU: 1 vCPU · min-instances: 1 · Timeout: 60s",
+      sa: "mate-prod-processor-sa",
+      perms: ["datastore.user", "pubsub.publisher", "aiplatform.user", "storage.objectAdmin"],
+      secrets: ["whatsapp-access-token", "whatsapp-phone-number-id"]
+    },
+    web: {
+      title: "web Dashboard",
+      type: "Next.js Cloud Run (Público)",
+      desc: "Dashboard web del agrónomo. Provee visualizaciones avanzadas de bitácoras por lotes y mapas con límites geográficos. Maneja también los flujos de autorización OAuth 2.0 (Drive Connector) y Magic Links de inicio de sesión.",
+      spec: "Memory: 1GB · CPU: 1 vCPU · min-instances: 1 · Timeout: 60s",
+      sa: "mate-prod-web-sa",
+      perms: ["datastore.viewer", "storage.objectViewer"],
+      secrets: ["jwt-signing-key"]
+    },
+    gcs: {
+      title: "mate-media-prod",
+      type: "Cloud Storage Bucket",
+      desc: "Almacén masivo de archivos en binario. Guarda de forma segura audios en formato OGG/MP3 de WhatsApp, fotos de monitoreo agronómico y copias temporales seguras de documentos parseados del cliente.",
+      spec: "Multi-regional (us-east1) · Standard Storage · Lifecycle: 90 days media",
+      sa: "No aplica",
+      perms: ["storage.objectAdmin", "storage.objectViewer"],
+      secrets: ["No requiere"]
+    },
+    db: {
+      title: "Firestore Native Instance",
+      type: "Cloud Firestore Database",
+      desc: "Almacenamiento de base de datos NoSQL. Mantiene la información del dominio estructurada (usuarios, establecimientos, lotes, bitácoras de cuaderno de campo y bitácoras conversacionales de RAG).",
+      spec: "Native Mode · Multi-region / regional us-east1 · Auto Indexing active",
+      sa: "No aplica",
+      perms: ["datastore.user", "datastore.viewer"],
+      secrets: ["No requiere"]
+    },
+    vertex: {
+      title: "Mateo Agent Engine",
+      type: "Vertex AI Agent Builder Engine",
+      desc: "Plataforma cognitiva del agente agrónomo. Almacena las directrices conversacionales en español rioplatense y la definición de las function-tools. Utiliza un ruteo dinámico con Gemini 2.5 Flash y Gemini 2.5 Pro.",
+      spec: "Vertex AI SDK · Modelos: Gemini 2.5 Flash (70%) + Pro (30%)",
+      sa: "No aplica (Llamado via IAM)",
+      perms: ["aiplatform.user"],
+      secrets: ["No requiere"]
+    },
+    indexer: {
+      title: "indexer",
+      type: "Cloud Run Service (Batch)",
+      desc: "Pipeline asíncrono para ingesta semántica. Se activa ante nuevos archivos de conectores. Extrae texto e imágenes con Document AI y Gemini Flash, chunkifica de forma semántica y computa vectores de búsqueda.",
+      spec: "Memory: 2GB · CPU: 2 vCPU · min-instances: 0 · Timeout: 1800s",
+      sa: "mate-prod-indexer-sa",
+      perms: ["storage.objectAdmin", "datastore.user", "aiplatform.user"],
+      secrets: ["mate-drive-sa-key"]
+    },
+    vsearch: {
+      title: "Vertex Vector Search",
+      type: "Vertex AI Vector Index",
+      desc: "Servicio de base de datos vectorial de alto rendimiento para búsqueda semántica. Alberga los fragmentos textuales convertidos en embeddings por el indexador, ofreciendo ruteo por UID de usuario como filtro de metadatos.",
+      spec: "text-embedding-005 · Index dimensional: 768 · Metric: Cosine",
+      sa: "No aplica",
+      perms: ["aiplatform.user"],
+      secrets: ["No requiere"]
+    }
+  };
+  
+  // Dibujar las líneas de conexión SVG dinámicamente
+  function drawConnections() {
+    const svg = document.getElementById('svg-connections');
+    svg.innerHTML = ''; // Limpiar
+    
+    const connections = [
+      { from: 'node-wa', to: 'node-ingest' },
+      { from: 'node-ingest', to: 'node-pubsub' },
+      { from: 'node-pubsub', to: 'node-proc' },
+      { from: 'node-proc', to: 'node-gcs' },
+      { from: 'node-proc', to: 'node-db' },
+      { from: 'node-proc', to: 'node-vertex' },
+      { from: 'node-proc', to: 'node-wa' },
+      { from: 'node-wa', to: 'node-web' },
+      { from: 'node-web', to: 'node-pubsub' },
+      { from: 'node-pubsub', to: 'node-index' },
+      { from: 'node-index', to: 'node-gcs' },
+      { from: 'node-index', to: 'node-db' },
+      { from: 'node-index', to: 'node-vsearch' },
+      { from: 'node-vertex', to: 'node-vsearch' }
+    ];
+    
+    setTimeout(() => {
+      const svgRect = svg.getBoundingClientRect();
+      
+      connections.forEach(conn => {
+        const fromEl = document.getElementById(conn.from);
+        const toEl = document.getElementById(conn.to);
+        
+        if (fromEl && toEl) {
+          const fromRect = fromEl.getBoundingClientRect();
+          const toRect = toEl.getBoundingClientRect();
+          
+          // Puntos centrales de cada caja relativos al SVG
+          const x1 = (fromRect.left + fromRect.width / 2) - svgRect.left;
+          const y1 = (fromRect.top + fromRect.height / 2) - svgRect.top;
+          
+          const x2 = (toRect.left + toRect.width / 2) - svgRect.left;
+          const y2 = (toRect.top + toRect.height / 2) - svgRect.top;
+          
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+          line.setAttribute('stroke', '#D9CFB6');
+          line.setAttribute('stroke-width', '1.5');
+          line.setAttribute('stroke-dasharray', '5 5');
+          svg.appendChild(line);
+        }
+      });
+    }, 100);
+  }
+  
+  // Cambiar de Pestaña de navegación (Mission Control Views)
+  function switchView(viewId, el) {
+    document.querySelectorAll('.view-section').forEach(view => {
+      view.classList.remove('active');
     });
-  });
-}
-
-function updatePhase(phaseId) {
-  const p = PHASES.find(x => x.id === phaseId);
-  const { total, done } = phaseCounts(p);
-  const pct = total === 0 ? 0 : Math.round(done/total*100);
-  const el = document.querySelector(`details[data-phase="${phaseId}"]`);
-  if (!el) return;
-  el.classList.toggle('done', pct === 100);
-  const pctEl = el.querySelector(`[data-pct="${phaseId}"]`);
-  const barEl = el.querySelector(`[data-bar="${phaseId}"]`);
-  if (pctEl) pctEl.parentElement.innerHTML = `<span data-pct="${phaseId}">${pct}</span>% · ${done}/${total}`;
-  if (barEl) barEl.style.width = `${pct}%`;
-}
-
-function updateStats() {
-  const g = globalCounts();
-  const m = globalCounts('mvp');
-  const c = globalCounts('coach');
-  document.getElementById('pctGlobal').textContent = g.pct;
-  document.getElementById('barGlobal').style.width = `${g.pct}%`;
-  document.getElementById('pctMvp').textContent = m.pct;
-  document.getElementById('barMvp').style.width = `${m.pct}%`;
-  document.getElementById('pctCoach').textContent = c.pct;
-  document.getElementById('barCoach').style.width = `${c.pct}%`;
-}
-
-/* ── filters ────────────────────────────────────────────── */
-let currentFilter = 'all';
-function applyFilter(filter) {
-  currentFilter = filter;
-  document.querySelectorAll('[data-filter]').forEach(b => {
-    b.setAttribute('aria-pressed', b.dataset.filter === filter ? 'true' : 'false');
-  });
-  document.querySelectorAll('.phase').forEach(phEl => {
-    const phaseId = phEl.dataset.phase;
-    const p = PHASES.find(x => x.id === phaseId);
-    let anyVisible = false;
-    phEl.querySelectorAll('.task').forEach((tEl, i) => {
-      const task = p.tasks[i];
-      const checked = isDone(p.id, i, task.d);
-      let show = true;
-      if (filter === 'pending') show = !checked;
-      else if (filter === 'done') show = checked;
-      else if (filter === 'mvp') show = task.t === 'mvp';
-      else if (filter === 'coach') show = task.t === 'coach';
-      tEl.classList.toggle('hidden', !show);
-      if (show) anyVisible = true;
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.classList.remove('active');
     });
-    phEl.classList.toggle('hidden', !anyVisible);
-  });
-}
-
-document.querySelectorAll('[data-filter]').forEach(btn => {
-  btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
-});
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm('¿Borrar todos los cambios guardados? Los items pre-marcados quedan como vienen.')) return;
-  Object.keys(state).forEach(k => delete state[k]);
-  save();
-  renderPhases();
-  updateStats();
-  applyFilter(currentFilter);
-});
-
-renderPhases();
-updateStats();
-applyFilter('all');
+    
+    document.getElementById(viewId).classList.add('active');
+    el.classList.add('active');
+    
+    // Cambiar etiquetas del header
+    const titleLabel = document.getElementById('view-title-label');
+    const subLabel = document.getElementById('view-subtitle-label');
+    
+    if (viewId === 'overview-section') {
+      titleLabel.innerText = "GCP Topología de Infraestructura";
+      subLabel.innerText = "Monitoreo estructural y flujo lógico de servicios de Mate AI en producción.";
+      drawConnections();
+    } else if (viewId === 'pipeline-section') {
+      titleLabel.innerText = "Simulador de Pipelines de Datos";
+      subLabel.innerText = "Visualiza el procesado y latencias de trazas de eventos asíncronos en vivo.";
+      drawSimConnections();
+    } else if (viewId === 'costs-section') {
+      titleLabel.innerText = "Monitor Financiero y Proyecciones";
+      subLabel.innerText = "Simulación e impacto de costos en base al escalado de usuarios activos mensuales.";
+      updateCosts(document.getElementById('mau-slider').value);
+    } else if (viewId === 'stack-section') {
+      titleLabel.innerText = "Directorio y Referencia del Stack";
+      subLabel.innerText = "Documentación de modelos Firestore, directorios de código y configuración de Secrets.";
+    }
+  }
+  
+  // Selección de Nodos del Mapa
+  function selectNode(nodeKey) {
+    document.querySelectorAll('.arch-node').forEach(node => {
+      node.classList.remove('selected');
+    });
+    
+    const nodeEl = document.getElementById('node-' + (nodeKey === 'indexer' ? 'index' : nodeKey));
+    if (nodeEl) nodeEl.classList.add('selected');
+    
+    const data = nodeDetails[nodeKey];
+    if (data) {
+      document.getElementById('drawer-placeholder').style.display = 'none';
+      document.getElementById('drawer-content').style.display = 'flex';
+      
+      document.getElementById('dr-title').innerText = data.title;
+      document.getElementById('dr-type').innerText = data.type;
+      document.getElementById('dr-desc').innerText = data.desc;
+      document.getElementById('dr-spec').innerText = data.spec;
+      
+      const saEl = document.getElementById('dr-sa-box');
+      if (data.sa === "No aplica" || data.sa.includes("Gestionado")) {
+        document.getElementById('dr-sa').innerText = data.sa;
+      } else {
+        document.getElementById('dr-sa').innerText = data.sa;
+      }
+      
+      // Renderizar Permisos
+      const permDiv = document.getElementById('dr-perms');
+      permDiv.innerHTML = '';
+      data.perms.forEach(perm => {
+        const span = document.createElement('span');
+        span.className = 'perm-badge';
+        span.innerText = perm;
+        permDiv.appendChild(span);
+      });
+      
+      // Renderizar Secretos
+      const secDiv = document.getElementById('dr-secrets');
+      secDiv.innerHTML = '';
+      data.secrets.forEach(sec => {
+        const span = document.createElement('span');
+        span.className = 'perm-badge';
+        span.style.background = '#FEF3E2';
+        span.style.color = '#A06B20';
+        span.style.borderColor = 'rgba(232, 155, 60, 0.2)';
+        span.innerText = sec;
+        secDiv.appendChild(span);
+      });
+    }
+  }
+  
+  // ==================== SIMULADOR DE PIPELINES LÓGICOS ====================
+  let currentSimMode = 'chat';
+  
+  const simNodes = {
+    chat: [
+      { id: 'snode-wa', name: 'WhatsApp Webhook', icon: '📱', x: 8, y: 50 },
+      { id: 'snode-ingest', name: 'ingest Cloud Run', icon: '📦', x: 26, y: 30 },
+      { id: 'snode-pubsub', name: 'Pub/Sub message-topic', icon: '⚡', x: 44, y: 50 },
+      { id: 'snode-proc', name: 'processor Service', icon: '⚙️', x: 62, y: 30 },
+      { id: 'snode-vertex', name: 'Gemini LLM (Flash)', icon: '🧠', x: 82, y: 50 },
+      { id: 'snode-wa-out', name: 'WhatsApp Reply', icon: '📱', x: 92, y: 30 }
+    ],
+    drive: [
+      { id: 'snode-drive', name: 'Drive OAuth / Callback', icon: '📁', x: 8, y: 65 },
+      { id: 'snode-web', name: 'web Next.js Service', icon: '🌐', x: 26, y: 65 },
+      { id: 'snode-pubsub-doc', name: 'Pub/Sub docs-to-index', icon: '⚡', x: 44, y: 65 },
+      { id: 'snode-indexer', name: 'indexer Engine', icon: '⚙️', x: 62, y: 65 },
+      { id: 'snode-vertex-embed', name: 'text-embedding-005', icon: '🧠', x: 80, y: 45 },
+      { id: 'snode-vsearch', name: 'Vector Search Index', icon: '🔍', x: 92, y: 65 }
+    ]
+  };
+  
+  function selectSimMode(mode) {
+    currentSimMode = mode;
+    document.getElementById('sim-btn-chat').classList.remove('active');
+    document.getElementById('sim-btn-drive').classList.remove('active');
+    
+    if (mode === 'chat') {
+      document.getElementById('sim-btn-chat').classList.add('active');
+      document.getElementById('sim-eta').innerText = "~2.5s (p95)";
+    } else {
+      document.getElementById('sim-btn-drive').classList.add('active');
+      document.getElementById('sim-eta').innerText = "Segundos/Minutos (Batch)";
+    }
+    
+    drawSimConnections();
+  }
+  
+  function drawSimConnections() {
+    const wrap = document.getElementById('sim-nodes-wrap');
+    const svg = document.getElementById('svg-sim-connections');
+    
+    wrap.innerHTML = '';
+    svg.innerHTML = '';
+    
+    const nodes = simNodes[currentSimMode];
+    
+    // Crear DOM de nodos
+    nodes.forEach(node => {
+      const div = document.createElement('div');
+      div.className = 'sim-node';
+      div.id = node.id;
+      div.style.left = node.x + '%';
+      div.style.top = node.y + '%';
+      if (node.x > 80) {
+        div.style.transform = 'translateX(-100%)';
+      }
+      div.innerHTML = `<span class="sim-node-icon">${node.icon}</span><span class="sim-node-name">${node.name}</span>`;
+      wrap.appendChild(div);
+    });
+    
+    // Dibujar líneas
+    setTimeout(() => {
+      const svgRect = svg.getBoundingClientRect();
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const fromEl = document.getElementById(nodes[i].id);
+        const toEl = document.getElementById(nodes[i+1].id);
+        
+        if (fromEl && toEl) {
+          const fromRect = fromEl.getBoundingClientRect();
+          const toRect = toEl.getBoundingClientRect();
+          
+          const x1 = (fromRect.left + fromRect.width / 2) - svgRect.left;
+          const y1 = (fromRect.top + fromRect.height / 2) - svgRect.top;
+          const x2 = (toRect.left + toRect.width / 2) - svgRect.left;
+          const y2 = (toRect.top + toRect.height / 2) - svgRect.top;
+          
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+          line.setAttribute('stroke', '#D9CFB6');
+          line.setAttribute('stroke-width', '2');
+          line.setAttribute('id', `line-flow-${i}`);
+          svg.appendChild(line);
+        }
+      }
+    }, 50);
+  }
+  
+  // Ejecutar animación de la simulación de pipelines
+  async function runPipelineSimulation() {
+    const btn = document.getElementById('btn-trigger-sim');
+    btn.disabled = true;
+    
+    const term = document.getElementById('terminal-body');
+    term.innerHTML = ''; // Limpiar logs
+    
+    const nodes = simNodes[currentSimMode];
+    const pulseDot = document.getElementById('data-pulse-dot');
+    
+    // Resetear clases de animación
+    document.querySelectorAll('.sim-node').forEach(el => el.classList.remove('active-flow'));
+    
+    const logsChat = [
+      { text: "Webhook recibido en /webhook desde el webhook de WhatsApp Cloud API.", class: "log-info", delay: 0 },
+      { text: "Firma HMAC SHA256 validada exitosamente con el secreto de la App.", class: "log-success", delay: 400 },
+      { text: "Evento estructurado enviado a Pub/Sub topic 'incoming-messages' (Key: phoneE164).", class: "log-accent", delay: 800 },
+      { text: "Processor despertó y consumió el payload de la cola Pub/Sub.", class: "log-info", delay: 1200 },
+      { text: "Cargando bitácora histórica para el UID: usr_019da (2 turnos rolling).", class: "log-info", delay: 1600 },
+      { text: "Llamando a Vertex AI Agent Engine utilizando Gemini 2.5 Flash...", class: "log-accent", delay: 2000 },
+      { text: "Tool Ejecutada: 'create_log_entry'. Se persiste reporte de lluvia de 25mm en Lote 'Bajo Grande'.", class: "log-success", delay: 2600 },
+      { text: "Respuesta compilada por Mateo. Generando llamada a WhatsApp Cloud API...", class: "log-success", delay: 3200 },
+      { text: "Mensaje entregado por WhatsApp. Duración total del pipeline: 2.38s.", class: "log-success", delay: 3800 }
+    ];
+    
+    const logsDrive = [
+      { text: "Usuario autorizó con éxito los permisos OAuth en el Dashboard web de Next.js.", class: "log-success", delay: 0 },
+      { text: "Google Drive Connector inicializado. watch channels activos en la Drive API.", class: "log-info", delay: 500 },
+      { text: "Evento de indexado publicado a Pub/Sub topic 'documents-to-index'.", class: "log-accent", delay: 1000 },
+      { text: "El pipeline indexer en Cloud Run (2GB) se activa e inicia la descarga del documento.", class: "log-info", delay: 1600 },
+      { text: "Extrayendo contenido estructurado del archivo 'analisis_suelo_san_miguel.pdf' mediante Document AI.", class: "log-info", delay: 2200 },
+      { text: "Gemini Flash procesa imágenes y tablas del reporte. Hechos detectados con confianza >= 0.85.", class: "log-accent", delay: 3000 },
+      { text: "Fragmentación semántica realizada con éxito (12 fragmentos, ~512 tokens).", class: "log-info", delay: 3600 },
+      { text: "Computando vectores a través del modelo Vertex AI text-embedding-005.", class: "log-accent", delay: 4200 },
+      { text: "Subida e indexado de embeddings completado en Vector Search global (Filtro metadata: userId).", class: "log-success", delay: 4800 },
+      { text: "Onboarding completo. Estado del usuario actualizado a 'completed' en Firestore.", class: "log-success", delay: 5400 }
+    ];
+    
+    const logs = currentSimMode === 'chat' ? logsChat : logsDrive;
+    
+    // Iniciar flujo de pulso visual
+    pulseDot.style.display = 'block';
+    
+    const svg = document.getElementById('svg-sim-connections');
+    const svgRect = svg.getBoundingClientRect();
+    
+    for (let i = 0; i < nodes.length; i++) {
+      const currentNodeEl = document.getElementById(nodes[i].id);
+      
+      // Resaltar nodo actual
+      currentNodeEl.classList.add('active-flow');
+      
+      // Mover punto de datos al nodo actual
+      const nodeRect = currentNodeEl.getBoundingClientRect();
+      const dotX = (nodeRect.left + nodeRect.width / 2) - svgRect.left - 6; // centrado
+      const dotY = (nodeRect.top + nodeRect.height / 2) - svgRect.top - 6;
+      
+      pulseDot.style.left = dotX + 'px';
+      pulseDot.style.top = dotY + 'px';
+      
+      // Escribir logs asociados al nodo
+      const currentLog = logs[i];
+      if (currentLog) {
+        setTimeout(() => {
+          appendLogLine(currentLog.text, currentLog.class);
+        }, currentLog.delay);
+        
+        await sleep(currentLog.delay === 0 ? 600 : logs[i].delay - logs[i-1].delay);
+      }
+    }
+    
+    pulseDot.style.display = 'none';
+    btn.disabled = false;
+  }
+  
+  function appendLogLine(text, className) {
+    const term = document.getElementById('terminal-body');
+    const now = new Date();
+    const timeStr = `[${now.toTimeString().split(' ')[0]}]`;
+    
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `<span class="log-time">${timeStr}</span><span class="log-text ${className}">${text}</span>`;
+    
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+  }
+  
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  // ==================== CALCULADORA DE COSTOS ====================
+  function updateCosts(mauVal) {
+    const sliderBubble = document.getElementById('mau-bubble');
+    sliderBubble.innerText = `${mauVal} MAU`;
+    
+    // Actualizar indicador de costo de tarjeta superior
+    const topCardCost = document.getElementById('top-card-cost-value');
+    
+    // Factores matemáticos estimados
+    // Gemini Flash: $0.075 / millon tokens, Pro: $1.25 / millon
+    // 40 turnos / mes * MAU. 
+    // Flash ratio: 70%, Pro: 30%.
+    const promptsPerUser = 40; 
+    const totalPrompts = promptsPerUser * mauVal;
+    
+    const flashPrompts = totalPrompts * 0.70;
+    const proPrompts = totalPrompts * 0.30;
+    
+    // Asumimos promedio de 1500 tokens input y 500 output por prompt
+    const avgTokensPrompt = 2000; 
+    const totalFlashTokens = flashPrompts * avgTokensPrompt;
+    const totalProTokens = proPrompts * avgTokensPrompt;
+    
+    // Precios de Tokens en Vertex AI
+    const costFlashLLM = (totalFlashTokens / 1000000) * 0.075;
+    const costProLLM = (totalProTokens / 1000000) * 1.25;
+    const totalLLMCost = costFlashLLM + costProLLM;
+    
+    // Cloud Run (Asumimos p95 de uso, procesamiento asíncrono y min-instances)
+    // Cloud Run cobra por CPU-segundo y memoria-segundo. Aprox $0.012 por usuario activo mensual
+    const totalRunCost = mauVal * 0.012 + 0.30; // base min instance
+    
+    // Firestore Reads/Writes
+    // Asumiendo 5 lecturas y 2 escrituras por turno
+    const totalWrites = totalPrompts * 2;
+    const totalReads = totalPrompts * 5;
+    const costFirestore = (totalWrites / 100000) * 0.18 + (totalReads / 100000) * 0.06;
+    
+    // Vertex Vector Search Index
+    // Carga fija base por el endpoint desplegado + queries marginales
+    const costVectorSearch = 0.40 * (mauVal / 50) + 0.20;
+    
+    // Bucket storage & logs marginales
+    const costStorage = 0.15 * (mauVal / 50) + 0.05;
+    
+    // Sumatorias
+    const totalGCP = totalLLMCost + totalRunCost + costFirestore + costVectorSearch + costStorage;
+    const perUserCost = totalGCP / mauVal;
+    
+    // Actualizar visualizaciones
+    document.getElementById('cost-total').innerText = `$${totalGCP.toFixed(2)}`;
+    document.getElementById('cost-per-user').innerText = `Equivale a ~$${perUserCost.toFixed(3)} / usuario`;
+    
+    document.getElementById('cost-llm').innerText = `$${totalLLMCost.toFixed(2)}`;
+    document.getElementById('cost-run').innerText = `$${totalRunCost.toFixed(2)}`;
+    document.getElementById('cost-db').innerText = `$${costFirestore.toFixed(2)}`;
+    document.getElementById('cost-search').innerText = `$${costVectorSearch.toFixed(2)}`;
+    document.getElementById('cost-storage').innerText = `$${costStorage.toFixed(2)}`;
+    
+    // Reflejar en la tarjeta de arriba para 50 o el valor actual
+    if (parseInt(mauVal) === 50) {
+      topCardCost.innerText = "$1.85";
+    } else {
+      topCardCost.innerText = `$${totalGCP.toFixed(2)}`;
+    }
+  }
+  
+  // ==================== STACK TAB SWITCHER ====================
+  function switchStackTab(tabId, el) {
+    document.querySelectorAll('.stack-pane-detail').forEach(pane => {
+      pane.classList.remove('active');
+    });
+    document.querySelectorAll('.stack-nav-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    el.classList.add('active');
+  }
+  
+  // Iniciar al cargar
+  window.onload = function() {
+    drawConnections();
+    drawSimConnections();
+    
+    // Recalcular conexiones en resize de pantalla
+    window.addEventListener('resize', () => {
+      if (document.getElementById('overview-section').classList.contains('active')) {
+        drawConnections();
+      } else if (document.getElementById('pipeline-section').classList.contains('active')) {
+        drawSimConnections();
+      }
+    });
+  };
 </script>
+
 </body>
 </html>

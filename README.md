@@ -1,26 +1,37 @@
-# mate-roadmap
+# mate-mission-control
 
-Mission control de **Mate AI** — roadmap MVP + Coach Wave 1.
+Panel operativo de **Mate AI** — arquitectura, pipelines y roadmap MVP + Coach Wave 1.
 
 Servido como página estática vía GitHub Pages.
 
-URL en vivo: https://patoalba.github.io/mate-roadmap/
+## Vistas
 
-## Qué hay acá
+| URL | Qué muestra |
+|-----|-------------|
+| **/** — `index.html` | Mission Control: panel de arquitectura, IAM, pipelines y secretos |
+| **/roadmap.html** | Roadmap MVP + Coach Wave 1 con checkboxes y progreso |
 
-Una sola página (`index.html`) que muestra las 4 fases del MVP, con checkboxes para marcar progreso. El estado se guarda en `localStorage` del browser — cada persona tiene su propia vista, no se sincroniza entre dispositivos.
+URLs en vivo:
+- https://patoalba.github.io/mate-mission-control/
+- https://patoalba.github.io/mate-mission-control/roadmap.html
 
-## Cómo actualizar
+## Fuente de verdad
 
-La fuente de verdad vive en el repo principal (privado): `mateai/coach-roadmap.html`. Cada vez que cambia el roadmap allá, se copia a `index.html` acá y se pushea.
+Los HTML viven en repos privados:
+- `index.html` ← `Mate AI/Mate Branding/mate-mission-control.html`
+- `roadmap.html` ← `mateai/coach-roadmap.html`
+
+Cada vez que cambian allá, se copian acá y se pushean:
 
 ```bash
-cp ../mateai/coach-roadmap.html index.html
-git add index.html && git commit -m "sync: roadmap update" && git push
+cd "/Users/.../Mate/mate-roadmap"
+cp "../Mate Branding/mate-mission-control.html" index.html
+cp ../mateai/coach-roadmap.html roadmap.html
+git add . && git commit -m "sync: mission control update" && git push
 ```
 
-A futuro: un GitHub Action en `mateai` que sincronice automáticamente.
+A futuro: GitHub Action que sincronice automáticamente.
 
 ## Privacidad
 
-Este repo es público pero no contiene código fuente, secrets, ni datos de usuarios. Solo task names y fechas del plan operativo.
+Este repo es público pero no contiene código fuente, secrets, ni datos de usuarios. Solo describe la arquitectura del sistema y el plan operativo — info de nivel "página About / Whitepaper" de un startup.
