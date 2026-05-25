@@ -307,9 +307,37 @@
       border-radius: 14px;
       border: 1px solid var(--border);
       position: relative;
-      height: 580px;
+      height: 620px;
       overflow: hidden;
     }
+
+    /* Layer bands — separan visualmente las 3 capas arquitectónicas */
+    .layer-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: 0;
+      border-top: 1px dashed rgba(0, 0, 0, 0.08);
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+    }
+    .layer-band-label {
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--soft);
+      background: rgba(255,255,255,0.7);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    #band-external { top: 4%;  height: 22%; background: rgba(232, 155, 60, 0.04); }
+    #band-compute  { top: 32%; height: 32%; background: rgba(76, 122, 78, 0.04); }
+    #band-data     { top: 68%; height: 28%; background: rgba(33, 102, 172, 0.04); }
     
     /* Map Nodes */
     .map-svg {
@@ -385,17 +413,47 @@
       letter-spacing: -0.2px;
     }
     
-    /* Node Specific Positions */
-    #node-wa     { top: 50%; left: 4%; transform: translateY(-50%); }
-    #node-ingest { top: 35%; left: 24%; }
-    #node-pubsub { top: 50%; left: 46%; transform: translateX(-50%) translateY(-50%); }
-    #node-proc   { top: 35%; left: 64%; }
-    #node-web    { top: 70%; left: 24%; }
-    #node-gcs    { top: 12%; left: 56%; }
-    #node-db     { top: 12%; left: 74%; }
-    #node-vertex { top: 35%; left: 83%; }
-    #node-index  { top: 70%; left: 64%; }
-    #node-vsearch{ top: 70%; left: 83%; }
+    /* Node positions, 3 lanes:
+       External (y 4-26%)  · Compute Cloud Run (y 32-64%)  · Data & AI (y 68-96%)
+       Cada nodo lleva un acento de color por lane (border-left). */
+
+    /* Lane 1: External */
+    #node-wa      { top: 11%; left: 8%;  border-left: 4px solid var(--amber); }
+    #node-drive   { top: 11%; left: 38%; border-left: 4px solid var(--amber); }
+    #node-monitor { top: 11%; left: 68%; border-left: 4px solid var(--amber); }
+
+    /* Lane 2: Compute · Cloud Run */
+    #node-ingest  { top: 42%; left: 6%;   border-left: 4px solid var(--green-forest); }
+    #node-pubsub  { top: 42%; left: 28%;  border-left: 4px solid var(--green-forest); }
+    #node-proc    { top: 42%; left: 50%;  border-left: 4px solid var(--green-forest); }
+    #node-web     { top: 42%; left: 76%;  border-left: 4px solid var(--green-forest); }
+    #node-index   { top: 56%; left: 28%;  border-left: 4px solid var(--green-forest); }
+
+    /* Lane 3: Data & AI */
+    #node-db      { top: 78%; left: 4%;   border-left: 4px solid #2166AC; }
+    #node-gcs     { top: 78%; left: 26%;  border-left: 4px solid #2166AC; }
+    #node-vertex  { top: 78%; left: 50%;  border-left: 4px solid #2166AC; }
+    #node-vsearch { top: 78%; left: 74%;  border-left: 4px solid #2166AC; }
+
+    /* Leyenda de capas, bajo el diagrama */
+    .arch-legend {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--soft);
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+    }
+    .arch-legend .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .arch-legend .item { display: flex; align-items: center; }
     
     /* Info Panel Sidebar */
     .arch-sidebar {
@@ -1037,42 +1095,42 @@
           <span>SLA Latencia</span>
           <span>Target</span>
         </div>
-        <div class="metric-value">2.4s</div>
-        <div class="metric-trend trend-up">
-          <span>✓</span> <span>p95 &lt; 5.0s OK</span>
+        <div class="metric-value">p95 &lt; 5s</div>
+        <div class="metric-trend trend-neutral">
+          <span>🔄</span> <span>Pendiente medir en prod con tráfico real</span>
         </div>
       </div>
-      
+
       <div class="metric-card">
         <div class="metric-header">
-          <span>Servicios Cloud Run</span>
+          <span>Servicios en prod</span>
           <span>Estado</span>
         </div>
         <div class="metric-value">3 / 4</div>
         <div class="metric-trend trend-up">
-          <span>🟢</span> <span>Indexer pendiente</span>
+          <span>🟢</span> <span>Indexer planeado para Fase 5</span>
         </div>
       </div>
-      
+
       <div class="metric-card">
         <div class="metric-header">
-          <span>Avance Roadmap</span>
-          <span>Semana 3</span>
+          <span>Avance MVP</span>
+          <span>14 días al lanzamiento</span>
         </div>
-        <div class="metric-value">44 / 92</div>
-        <div class="metric-trend trend-neutral">
-          <span>🔄</span> <span>48% MVP completado</span>
+        <div class="metric-value">35 / 49</div>
+        <div class="metric-trend trend-up">
+          <span>🔄</span> <span>71% — lanzamiento 8-jun-2026</span>
         </div>
       </div>
-      
+
       <div class="metric-card">
         <div class="metric-header">
-          <span>Costo MAU</span>
-          <span>Actual</span>
+          <span>Costo / MAU</span>
+          <span>Proyección 50 usuarios</span>
         </div>
         <div class="metric-value" id="top-card-cost-value">$1.85</div>
         <div class="metric-trend trend-up">
-          <span>✓</span> <span>Proyección 50 usuarios</span>
+          <span>✓</span> <span>Bajo el target de USD 100-125/mes</span>
         </div>
       </div>
     </section>
@@ -1091,26 +1149,66 @@
             
             <!-- Viewport del diagrama -->
             <div class="diagram-viewport" id="viewport">
+              <!-- Capas arquitectónicas como bandas de fondo -->
+              <div class="layer-band" id="band-external">
+                <span class="layer-band-label">External · Inputs</span>
+              </div>
+              <div class="layer-band" id="band-compute">
+                <span class="layer-band-label">Compute · Cloud Run (us-east1)</span>
+              </div>
+              <div class="layer-band" id="band-data">
+                <span class="layer-band-label">Data & AI</span>
+              </div>
+
               <svg class="map-svg" id="svg-connections">
+                <defs>
+                  <!-- Arrowhead común para todas las líneas direccionales -->
+                  <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#9c8b75" />
+                  </marker>
+                </defs>
                 <!-- SVG lines will be drawn here dynamically on load by JS to ensure perfect position -->
               </svg>
-              
+
               <div class="map-nodes-container">
+                <!-- ============ Lane 1: External ============ -->
+
                 <!-- WhatsApp Entry Node -->
                 <div class="arch-node" id="node-wa" onclick="selectNode('wa')">
                   <div class="arch-node-icon">📱</div>
                   <div class="arch-node-details">
-                    <span class="arch-node-name">WhatsApp API</span>
-                    <span class="arch-node-type">Canal Entrada</span>
+                    <span class="arch-node-name">WhatsApp Cloud API</span>
+                    <span class="arch-node-type">Meta · Canal primario</span>
                   </div>
                 </div>
-                
+
+                <!-- Drive Connector (SA-shared-folder Path) -->
+                <div class="arch-node" id="node-drive" onclick="selectNode('drive')">
+                  <div class="arch-node-icon">📁</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Drive del cliente</span>
+                    <span class="arch-node-type">Google Drive · SA-shared-folder</span>
+                  </div>
+                </div>
+
+                <!-- Cloud Monitoring -->
+                <div class="arch-node" id="node-monitor" onclick="selectNode('monitor')">
+                  <div class="arch-node-icon">🚨</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Cloud Monitoring</span>
+                    <span class="arch-node-type">Alert error rate &gt; 5%</span>
+                  </div>
+                </div>
+
+                <!-- ============ Lane 2: Compute · Cloud Run ============ -->
+
                 <!-- Cloud Run Ingest Node -->
                 <div class="arch-node" id="node-ingest" onclick="selectNode('ingest')">
                   <div class="arch-node-icon">📦</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">ingest</span>
-                    <span class="arch-node-type">Cloud Run</span>
+                    <span class="arch-node-type">Cloud Run · público</span>
                   </div>
                 </div>
                 
@@ -1119,73 +1217,84 @@
                   <div class="arch-node-icon">⚡</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">incoming-messages</span>
-                    <span class="arch-node-type">Pub/Sub Topic</span>
+                    <span class="arch-node-type">Pub/Sub · ordering por phone</span>
                   </div>
                 </div>
-                
+
                 <!-- Cloud Run Processor Node -->
                 <div class="arch-node" id="node-proc" onclick="selectNode('proc')">
                   <div class="arch-node-icon">📦</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">processor</span>
-                    <span class="arch-node-type">Cloud Run</span>
+                    <span class="arch-node-type">Cloud Run · privado</span>
                   </div>
                 </div>
-                
+
                 <!-- Web Node Nextjs -->
                 <div class="arch-node" id="node-web" onclick="selectNode('web')">
                   <div class="arch-node-icon">🌐</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">web Dashboard</span>
-                    <span class="arch-node-type">Next.js Cloud Run</span>
+                    <span class="arch-node-type">Next.js · Cloud Run</span>
                   </div>
                 </div>
-                
-                <!-- GCS Storage -->
-                <div class="arch-node" id="node-gcs" onclick="selectNode('gcs')">
-                  <div class="arch-node-icon">🪣</div>
-                  <div class="arch-node-details">
-                    <span class="arch-node-name">mate-media-prod</span>
-                    <span class="arch-node-type">Cloud Storage</span>
-                  </div>
-                </div>
-                
-                <!-- Firestore DB -->
-                <div class="arch-node" id="node-db" onclick="selectNode('db')">
-                  <div class="arch-node-icon">🔥</div>
-                  <div class="arch-node-details">
-                    <span class="arch-node-name">Firestore Native</span>
-                    <span class="arch-node-type">Colecciones</span>
-                  </div>
-                </div>
-                
-                <!-- Vertex AI Engine -->
-                <div class="arch-node" id="node-vertex" onclick="selectNode('vertex')">
-                  <div class="arch-node-icon">🧠</div>
-                  <div class="arch-node-details">
-                    <span class="arch-node-name">Mateo Agent</span>
-                    <span class="arch-node-type">Vertex AI Engine</span>
-                  </div>
-                </div>
-                
+
                 <!-- Indexer Node -->
                 <div class="arch-node" id="node-index" onclick="selectNode('indexer')">
                   <div class="arch-node-icon">⚙️</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">indexer (RAG)</span>
-                    <span class="arch-node-type">Cloud Run (F3)</span>
+                    <span class="arch-node-type">Cloud Run · Fase 5</span>
                   </div>
                 </div>
-                
+
+                <!-- ============ Lane 3: Data & AI ============ -->
+
+                <!-- Firestore DB -->
+                <div class="arch-node" id="node-db" onclick="selectNode('db')">
+                  <div class="arch-node-icon">🔥</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Firestore Native</span>
+                    <span class="arch-node-type">Datos del usuario · TTL en caches</span>
+                  </div>
+                </div>
+
+                <!-- GCS Storage -->
+                <div class="arch-node" id="node-gcs" onclick="selectNode('gcs')">
+                  <div class="arch-node-icon">🪣</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">mate-media-prod</span>
+                    <span class="arch-node-type">Cloud Storage · audios/imgs</span>
+                  </div>
+                </div>
+
+                <!-- Vertex AI Engine -->
+                <div class="arch-node" id="node-vertex" onclick="selectNode('vertex')">
+                  <div class="arch-node-icon">🧠</div>
+                  <div class="arch-node-details">
+                    <span class="arch-node-name">Mateo Agent</span>
+                    <span class="arch-node-type">Vertex AI · Gemini 2.5 Flash/Pro</span>
+                  </div>
+                </div>
+
                 <!-- Vector Search -->
                 <div class="arch-node" id="node-vsearch" onclick="selectNode('vsearch')">
                   <div class="arch-node-icon">🔍</div>
                   <div class="arch-node-details">
                     <span class="arch-node-name">Vector Search</span>
-                    <span class="arch-node-type">Vertex AI Index</span>
+                    <span class="arch-node-type">Vertex AI · RAG · Fase 5</span>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Leyenda visual de las capas -->
+            <div class="arch-legend" aria-label="Leyenda de capas">
+              <div class="item"><span class="dot" style="background: var(--amber)"></span>External · Inputs y observadores</div>
+              <div class="item"><span class="dot" style="background: var(--green-forest)"></span>Compute · Cloud Run + Pub/Sub</div>
+              <div class="item"><span class="dot" style="background: #2166AC"></span>Data & AI · Storage y modelos</div>
+              <div class="item">→ Flecha sólida: pipeline conversacional</div>
+              <div class="item">⤳ Línea punteada: observación / control</div>
             </div>
             
             <!-- Barra lateral de detalles -->
@@ -1534,11 +1643,11 @@
     proc: {
       title: "processor",
       type: "Cloud Run Service (Privado)",
-      desc: "Núcleo de orquestación conversacional de Mate. Consume mensajes en cola, descarga archivos multimedia desde Meta a Cloud Storage, invoca al Vertex AI Agent Engine y escribe el cuaderno de campo e histórico en Firestore.",
-      spec: "Memory: 1GB · CPU: 1 vCPU · min-instances: 1 · Timeout: 60s",
+      desc: "Núcleo conversacional. Consume mensajes de Pub/Sub, descarga media desde Meta a GCS, invoca al agente Mateo en Vertex AI (ADK + Gemini Flash/Pro), persiste en Firestore y responde por WhatsApp. Incluye: cache de turnos por wamid (anti doble-cobro Gemini en re-delivery), retry exponencial al enviar a WhatsApp (3 intentos, 429/5xx/network) y fallback rioplatense si ADK falla.",
+      spec: "Memory: 1GB · CPU: 1 vCPU · min-instances: 1 · Timeout: 300s · env Vertex: GOOGLE_GENAI_USE_VERTEXAI",
       sa: "mate-prod-processor-sa",
       perms: ["datastore.user", "pubsub.publisher", "aiplatform.user", "storage.objectAdmin"],
-      secrets: ["whatsapp-access-token", "whatsapp-phone-number-id"]
+      secrets: ["whatsapp-access-token", "whatsapp-phone-number-id", "mate-prod-onboarding-sa-key"]
     },
     web: {
       title: "web Dashboard",
@@ -1561,8 +1670,8 @@
     db: {
       title: "Firestore Native Instance",
       type: "Cloud Firestore Database",
-      desc: "Almacenamiento de base de datos NoSQL. Mantiene la información del dominio estructurada (usuarios, establecimientos, lotes, bitácoras de cuaderno de campo y bitácoras conversacionales de RAG).",
-      spec: "Native Mode · Multi-region / regional us-east1 · Auto Indexing active",
+      desc: "NoSQL del dominio. Colecciones del usuario (users, establishments, plots, logEntries, reminders, conversations, knowledgeProfile). Caches con TTL: processedTurns (7d, anti doble-cobro Gemini) y messagesSeen (24h, dedup del webhook). Acceso del cliente denegado por rules — solo el backend escribe.",
+      spec: "Native Mode · us-east1 · PITR enabled · TTL policies activas",
       sa: "No aplica",
       perms: ["datastore.user", "datastore.viewer"],
       secrets: ["No requiere"]
@@ -1593,59 +1702,100 @@
       sa: "No aplica",
       perms: ["aiplatform.user"],
       secrets: ["No requiere"]
+    },
+    drive: {
+      title: "Drive del cliente",
+      type: "Google Drive · Onboarding Path",
+      desc: "Carpeta de Google Drive del usuario compartida con la service account de onboarding (mate-prod-onboarding-sa). El processor lee los documentos una vez con la API de Drive, los extrae con Gemini Flash y crea Establishment + Plots + LogEntries en Firestore. Fase 5: se reemplaza por OAuth + Drive Picker (Path A) sin necesidad de compartir carpeta.",
+      spec: "Cap 50 archivos · 10MB/archivo · TXT/CSV/PDF/imgs",
+      sa: "mate-prod-onboarding-sa@mate-ia-001.iam.gserviceaccount.com",
+      perms: ["drive.readonly (scope OAuth restringido)"],
+      secrets: ["mate-prod-onboarding-sa-key"]
+    },
+    monitor: {
+      title: "Cloud Monitoring",
+      type: "Alerting · Log-based metrics",
+      desc: "Alert policy 'processor error rate > 5% (2h)' con dos log-based metrics (errors / turns) y notification channel email. Validado end-to-end con test sintético — latencia log → mail < 1 min. Documentación de triage embebida en el incidente.",
+      spec: "MQL ratio sobre rate(2h) · canal: patricio.alba@xaviaiot.com",
+      sa: "No aplica",
+      perms: ["monitoring.metricWriter (implícito en Cloud Run)"],
+      secrets: ["No requiere"]
     }
   };
   
-  // Dibujar las líneas de conexión SVG dinámicamente
+  // Dibujar las líneas de conexión SVG dinámicamente.
+  // type "flow"     → línea sólida con flecha (pipeline real de datos).
+  // type "observe"  → línea punteada sin flecha (observación / control side-channel).
   function drawConnections() {
     const svg = document.getElementById('svg-connections');
-    svg.innerHTML = ''; // Limpiar
-    
+    // Limpiar pero preservar <defs> (arrowhead marker).
+    Array.from(svg.querySelectorAll('line')).forEach(l => l.remove());
+
     const connections = [
-      { from: 'node-wa', to: 'node-ingest' },
-      { from: 'node-ingest', to: 'node-pubsub' },
-      { from: 'node-pubsub', to: 'node-proc' },
-      { from: 'node-proc', to: 'node-gcs' },
-      { from: 'node-proc', to: 'node-db' },
-      { from: 'node-proc', to: 'node-vertex' },
-      { from: 'node-proc', to: 'node-wa' },
-      { from: 'node-wa', to: 'node-web' },
-      { from: 'node-web', to: 'node-pubsub' },
-      { from: 'node-pubsub', to: 'node-index' },
-      { from: 'node-index', to: 'node-gcs' },
-      { from: 'node-index', to: 'node-db' },
-      { from: 'node-index', to: 'node-vsearch' },
-      { from: 'node-vertex', to: 'node-vsearch' }
+      // Camino conversacional (camino feliz): WA → ingest → pubsub → processor → vertex → processor → WA
+      { from: 'node-wa',     to: 'node-ingest',  type: 'flow' },
+      { from: 'node-ingest', to: 'node-pubsub',  type: 'flow' },
+      { from: 'node-pubsub', to: 'node-proc',    type: 'flow' },
+      { from: 'node-proc',   to: 'node-vertex',  type: 'flow' },
+      { from: 'node-proc',   to: 'node-db',      type: 'flow' },
+      { from: 'node-proc',   to: 'node-gcs',     type: 'flow' },
+      { from: 'node-proc',   to: 'node-wa',      type: 'flow' },
+
+      // Onboarding por Drive: processor lee del Drive del cliente (vía SA).
+      { from: 'node-drive',  to: 'node-proc',    type: 'flow' },
+
+      // Dashboard web lee Firestore directamente (no pasa por processor).
+      { from: 'node-web',    to: 'node-db',      type: 'flow' },
+
+      // RAG path (Fase 5): processor → vector search; indexer ↔ data.
+      { from: 'node-vertex', to: 'node-vsearch', type: 'flow' },
+      { from: 'node-index',  to: 'node-gcs',     type: 'flow' },
+      { from: 'node-index',  to: 'node-db',      type: 'flow' },
+      { from: 'node-index',  to: 'node-vsearch', type: 'flow' },
+
+      // Observación: Monitoring lee logs de todos los Cloud Run.
+      // Sin flecha — es side-channel pasivo.
+      { from: 'node-monitor', to: 'node-ingest', type: 'observe' },
+      { from: 'node-monitor', to: 'node-proc',   type: 'observe' },
+      { from: 'node-monitor', to: 'node-web',    type: 'observe' },
     ];
-    
+
     setTimeout(() => {
       const svgRect = svg.getBoundingClientRect();
-      
+
       connections.forEach(conn => {
         const fromEl = document.getElementById(conn.from);
         const toEl = document.getElementById(conn.to);
-        
-        if (fromEl && toEl) {
-          const fromRect = fromEl.getBoundingClientRect();
-          const toRect = toEl.getBoundingClientRect();
-          
-          // Puntos centrales de cada caja relativos al SVG
-          const x1 = (fromRect.left + fromRect.width / 2) - svgRect.left;
-          const y1 = (fromRect.top + fromRect.height / 2) - svgRect.top;
-          
-          const x2 = (toRect.left + toRect.width / 2) - svgRect.left;
-          const y2 = (toRect.top + toRect.height / 2) - svgRect.top;
-          
-          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', x1);
-          line.setAttribute('y1', y1);
-          line.setAttribute('x2', x2);
-          line.setAttribute('y2', y2);
-          line.setAttribute('stroke', '#D9CFB6');
-          line.setAttribute('stroke-width', '1.5');
-          line.setAttribute('stroke-dasharray', '5 5');
-          svg.appendChild(line);
+        if (!fromEl || !toEl) return;
+
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+
+        // Puntos centrales de cada caja relativos al SVG.
+        const x1 = (fromRect.left + fromRect.width / 2) - svgRect.left;
+        const y1 = (fromRect.top + fromRect.height / 2) - svgRect.top;
+        const x2 = (toRect.left + toRect.width / 2) - svgRect.left;
+        const y2 = (toRect.top + toRect.height / 2) - svgRect.top;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+
+        if (conn.type === 'observe') {
+          // Side-channel de observación, suave y sin punta de flecha.
+          line.setAttribute('stroke', '#C9BBA1');
+          line.setAttribute('stroke-width', '1');
+          line.setAttribute('stroke-dasharray', '3 4');
+          line.setAttribute('opacity', '0.6');
+        } else {
+          // Flujo principal: sólido, con arrowhead.
+          line.setAttribute('stroke', '#9c8b75');
+          line.setAttribute('stroke-width', '1.8');
+          line.setAttribute('marker-end', 'url(#arrowhead)');
         }
+        svg.appendChild(line);
       });
     }, 100);
   }
