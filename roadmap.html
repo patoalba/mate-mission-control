@@ -414,6 +414,7 @@ const PHASES = [
       { t: 'mvp', d: true,  text: 'Smoke E2E con carpeta Drive real: 4 archivos, Don Pedro, wow rioplatense (Gate A ✅)' },
       { t: 'mvp', d: true,  text: 'Fix bloqueante: GOOGLE_GENAI_USE_VERTEXAI + GOOGLE_CLOUD_PROJECT/LOCATION en processor Cloud Run' },
       { t: 'mvp', d: true,  text: 'Dedup de plots: normalize_plot_name (sin puntuación/espacios) + smart merge (gana no-null, tiebreak por confidence). 8→4 plots en el caso real del smoke. 13 tests nuevos.' },
+      { t: 'mvp', d: true,  text: 'TTL policies en Firestore: processedTurns (7d) y messagesSeen (24h) — Terraform en mate-infra módulo firestore' },
       { t: 'mvp', d: true,  text: 'Hardening ADK: fallback rioplatense + log estructurado por clase de error (timeout/quota/genérico)' },
       { t: 'mvp', d: true,  text: 'Hardening WhatsApp: retry exponencial 3 intentos en 429/5xx/network, no en 4xx permanentes' },
       { t: 'mvp', d: true,  text: '17 tests de WhatsApp client + 4 nuevos de fallback ADK verdes' },
