@@ -414,7 +414,9 @@ const PHASES = [
       { t: 'mvp', d: true,  text: 'Smoke E2E con carpeta Drive real: 4 archivos, Don Pedro, wow rioplatense (Gate A ✅)' },
       { t: 'mvp', d: true,  text: 'Fix bloqueante: GOOGLE_GENAI_USE_VERTEXAI + GOOGLE_CLOUD_PROJECT/LOCATION en processor Cloud Run' },
       { t: 'mvp', d: false, text: 'Tunear dedup de plots (Gemini extrae "Lote 1 Norte" y "Lote 1 (Norte)" como distintos)' },
-      { t: 'mvp', d: false, text: 'Hardening: fallback si ADK falla, retry con backoff WhatsApp' },
+      { t: 'mvp', d: true,  text: 'Hardening ADK: fallback rioplatense + log estructurado por clase de error (timeout/quota/genérico)' },
+      { t: 'mvp', d: true,  text: 'Hardening WhatsApp: retry exponencial 3 intentos en 429/5xx/network, no en 4xx permanentes' },
+      { t: 'mvp', d: true,  text: '17 tests de WhatsApp client + 4 nuevos de fallback ADK verdes' },
       { t: 'mvp', d: false, text: 'Alerta Cloud Logging: error rate > 5% en últimas 2h' },
       { t: 'mvp', d: false, text: '50 turnos reales del equipo + ajustar tono si no es rioplatense' },
       // Coach E1+E2
