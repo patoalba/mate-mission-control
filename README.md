@@ -9,16 +9,19 @@ Servido como página estática vía GitHub Pages.
 | URL | Qué muestra |
 |-----|-------------|
 | **/** — `index.html` | Mission Control: panel de arquitectura, IAM, pipelines y secretos |
+| **/landing.html** | Landing pública del producto (marketing, value prop) |
 | **/roadmap.html** | Roadmap MVP + Coach Wave 1 con checkboxes y progreso |
 
 URLs en vivo:
 - https://patoalba.github.io/mate-mission-control/
+- https://patoalba.github.io/mate-mission-control/landing.html
 - https://patoalba.github.io/mate-mission-control/roadmap.html
 
 ## Fuente de verdad
 
 Los HTML viven en repos privados:
 - `index.html` ← `Mate AI/Mate Branding/mate-mission-control.html`
+- `landing.html` ← `Mate AI/Mate Branding/mate-landing.html`
 - `roadmap.html` ← `mateai/coach-roadmap.html`
 
 Cada vez que cambian allá, se copian acá y se pushean:
@@ -26,8 +29,9 @@ Cada vez que cambian allá, se copian acá y se pushean:
 ```bash
 cd "/Users/.../Mate/mate-roadmap"
 cp "../Mate Branding/mate-mission-control.html" index.html
+cp "../Mate Branding/mate-landing.html" landing.html
 cp ../mateai/coach-roadmap.html roadmap.html
-git add . && git commit -m "sync: mission control update" && git push
+git add . && git commit -m "sync: update" && git push
 ```
 
 A futuro: GitHub Action que sincronice automáticamente.

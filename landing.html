@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mate — El asistente de IA para el campo</title>
+<meta name="description" content="Mate es un agente de inteligencia artificial que acompaña al ingeniero agrónomo y al productor. Estrategia de siembra, rotación y cuaderno de campo, en una conversación." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  /* =========================================================
+     MATE — Landing
+     Paleta: tierra moderna · ocre · verde oliva · beige
+     Tipografía: Fraunces (serif) + Inter (sans)
+     ========================================================= */
+
+  :root{
+    --bg:        #F2ECDF;   /* crema cálido, base "papel madera" */
+    --bg-alt:   #E8DFCB;   /* beige más profundo para alternar secciones */
+    --ink:      #1F1B14;   /* casi negro, cálido */
+    --ink-soft: #4A4338;
+    --olive:    #515C36;   /* verde oliva del campo */
+    --olive-dk: #2F371D;
+    --ochre:    #B7782B;   /* ocre / cuero */
+    --ochre-dk: #8C5A1C;
+    --line:     rgba(31,27,20,0.14);
+    --line-strong: rgba(31,27,20,0.28);
+
+    --serif: 'Fraunces', 'Georgia', serif;
+    --sans:  'Inter', 'Helvetica Neue', system-ui, sans-serif;
+
+    --maxw: 1200px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+
+  /* Texturita orgánica de fondo, muy sutil */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(183,120,43,0.06) 0, transparent 40%),
+      radial-gradient(circle at 88% 78%, rgba(81,92,54,0.08) 0, transparent 45%);
+    z-index:0;
+  }
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+  /* ===================== NAV ===================== */
+  nav.top{
+    position:sticky;top:0;z-index:50;
+    background: rgba(242,236,223,0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:24px;
+    letter-spacing:-0.01em;
+  }
+  .brand .dot{
+    width:10px;height:10px;border-radius:50%;
+    background: var(--ochre);
+    box-shadow: 0 0 0 4px rgba(183,120,43,0.18);
+  }
+  nav.top ul{
+    display:flex;gap:34px;list-style:none;
+    font-size:14px;color:var(--ink-soft);
+  }
+  nav.top ul a{transition:color .2s ease}
+  nav.top ul a:hover{color:var(--ochre-dk)}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 16px;border-radius:999px;
+    background:var(--ink);color:var(--bg);
+    font-size:13px;font-weight:500;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .pill:hover{background:var(--olive-dk);transform:translateY(-1px)}
+
+  @media (max-width: 720px){
+    nav.top ul{display:none}
+  }
+
+  /* ===================== HERO ===================== */
+  header.hero{
+    padding: 72px 0 96px;
+    position:relative;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--sans);
+    font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--olive-dk);
+    padding:8px 14px;
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    background:rgba(255,255,255,0.4);
+  }
+  .eyebrow .sun{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--ochre);
+    box-shadow:0 0 0 3px rgba(183,120,43,0.25);
+  }
+
+  h1.headline{
+    margin-top: 28px;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(48px, 7.6vw, 116px);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 11ch;
+  }
+  h1.headline em{
+    font-style: italic;
+    font-weight: 400;
+    color: var(--olive-dk);
+  }
+  h1.headline .ampersand{
+    color: var(--ochre);
+    font-style: italic;
+    font-weight:300;
+  }
+
+  .sub{
+    margin-top: 28px;
+    max-width: 540px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 920px){
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+  }
+
+  .hero-actions{
+    margin-top:36px;
+    display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+  }
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;border-radius:999px;
+    background:var(--olive);color:#fff;
+    font-weight:500;font-size:15px;
+    transition:transform .2s ease, background .2s ease;
+  }
+  .btn-primary:hover{background:var(--olive-dk);transform:translateY(-1px)}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 22px;border-radius:999px;
+    color:var(--ink);
+    border:1px solid var(--line-strong);
+    font-weight:500;font-size:15px;
+    transition:background .2s ease;
+  }
+  .btn-ghost:hover{background:rgba(31,27,20,0.05)}
+
+  /* MATE ICON / VISUAL — gourd + bombilla minimalista */
+  .visual{
+    position:relative;
+    display:flex;justify-content:center;align-items:center;
+    min-height: 460px;
+  }
+  .visual .stage{
+    position:relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    max-width: 460px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 35%, #E8DFCB 0%, #D9CCAE 60%, #C9B98F 100%);
+    box-shadow:
+      inset 0 -40px 80px rgba(140,90,28,0.18),
+      0 30px 80px rgba(31,27,20,0.12);
+    overflow:hidden;
+  }
+  /* Glow sutil detrás de la Ronda Solar */
+  .visual .stage::after{
+    content:"";
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width: 92%;aspect-ratio:1/1;border-radius:50%;
+    background: radial-gradient(circle, rgba(229,162,74,0.22) 0%, rgba(229,162,74,0) 65%);
+    pointer-events:none;
+  }
+
+  /* taglines alternativos (selector visual) */
+  .tagline-pick{
+    margin-top:28px;
+    display:flex;flex-wrap:wrap;gap:8px;
+    font-family:var(--sans);
+    font-size:12px;color:var(--ink-soft);
+  }
+  .tagline-pick span{
+    padding:6px 12px;border-radius:999px;
+    background:rgba(255,255,255,0.5);
+    border:1px solid var(--line);
+  }
+  .tagline-pick b{font-weight:600;color:var(--olive-dk)}
+
+  /* ===================== STRIP / SOCIAL PROOF ===================== */
+  .strip{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background: var(--bg-alt);
+    padding: 28px 0;
+    overflow:hidden;
+  }
+  .strip .row{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:32px;flex-wrap:wrap;
+    font-family:var(--serif);
+    font-size:18px;color:var(--olive-dk);
+    font-style: italic;
+    font-weight:400;
+  }
+  .strip .row span{display:inline-flex;align-items:center;gap:14px}
+  .strip .row .sep{
+    width:6px;height:6px;border-radius:50%;background:var(--ochre);
+  }
+
+  /* ===================== "CONOCÉ A MATEO" ===================== */
+  section.intro{padding: 120px 0 80px}
+  .intro-grid{
+    display:grid;grid-template-columns: 0.9fr 1.1fr;gap:80px;align-items:start;
+  }
+  @media (max-width: 920px){
+    .intro-grid{grid-template-columns:1fr;gap:40px}
+  }
+  .section-label{
+    font-family:var(--sans);
+    font-size:12px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--ochre-dk);
+  }
+  h2.section-title{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size: clamp(36px, 4.5vw, 64px);
+    line-height:1.05;
+    letter-spacing:-0.02em;
+    margin-top:16px;
+    max-width:14ch;
+  }
+  h2.section-title em{font-style:italic;color:var(--olive-dk)}
+
+  .intro p{
+    font-size:18px;color:var(--ink-soft);max-width:52ch;
+    margin-bottom: 18px;
+  }
+  .intro p strong{color:var(--ink);font-weight:600}
+
+  .quote{
+    margin-top:24px;
+    padding: 20px 24px;
+    border-left:3px solid var(--ochre);
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:22px;
+    color:var(--olive-dk);
+    line-height:1.4;
+  }
+
+  /* ===================== FEATURES ===================== */
+  section.features{
+    padding: 80px 0 120px;
+  }
+  .features-head{
+    display:flex;justify-content:space-between;align-items:end;
+    gap:32px;margin-bottom:56px;flex-wrap:wrap;
+  }
+  .features-head p{
+    max-width:38ch;color:var(--ink-soft);font-size:17px;
+  }
+  .feature-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  }
+  @media (max-width: 920px){
+    .feature-grid{grid-template-columns:1fr}
+  }
+  .feature{
+    position:relative;
+    padding: 40px;
+    border-radius: 24px;
+    background: #FBF6EA;
+    border: 1px solid var(--line);
+    overflow:hidden;
+    transition: transform .3s ease, box-shadow .3s ease;
+    min-height: 460px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .feature:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(31,27,20,0.10);
+  }
+  .feature .num{
+    font-family:var(--serif);
+    font-size:14px;
+    color:var(--ochre);
+    letter-spacing:0.2em;
+  }
+  .feature h3{
+    margin-top:18px;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height:1.05;
+    letter-spacing:-0.015em;
+    max-width:14ch;
+  }
+  .feature h3 em{font-style:italic;color:var(--olive-dk)}
+  .feature p.desc{
+    margin-top:14px;
+    font-size:16px;color:var(--ink-soft);max-width:36ch;
+  }
+  .feature .demo{
+    margin-top:28px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color:var(--ink-soft);
+  }
+  .feature .demo .me{color:var(--ochre-dk)}
+  .feature .demo .mate{color:var(--olive-dk)}
+  .feature .demo .label{
+    display:block;
+    font-family:var(--sans);
+    font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+    opacity:.7;
+  }
+  .feature .demo .bubble{margin-bottom:14px}
+  .feature .demo .bubble:last-child{margin-bottom:0}
+
+  /* ===================== TRADICIÓN + FUTURO (manifesto) ===================== */
+  section.manifesto{
+    background: var(--olive-dk);
+    color: #F2ECDF;
+    padding: 120px 0;
+    position:relative;overflow:hidden;
+  }
+  section.manifesto::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(183,120,43,0.18), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(229,162,74,0.12), transparent 50%);
+    pointer-events:none;
+  }
+  .manifesto .wrap{position:relative}
+  .manifesto h2{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size: clamp(40px, 5.5vw, 78px);
+    line-height:1.05;letter-spacing:-0.02em;
+    max-width: 18ch;
+  }
+  .manifesto h2 em{font-style:italic;color:#E5A24A}
+  .manifesto p{
+    margin-top:36px;
+    max-width:54ch;
+    font-size:19px;
+    color: rgba(242,236,223,0.78);
+  }
+  .pair{
+    margin-top:64px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:48px;
+  }
+  @media (max-width:780px){.pair{grid-template-columns:1fr}}
+  .pair .item{
+    border-top:1px solid rgba(242,236,223,0.2);
+    padding-top:22px;
+  }
+  .pair .item .k{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:14px;letter-spacing:.04em;
+    color:#E5A24A;
+    margin-bottom:10px;
+  }
+  .pair .item .v{
+    font-family:var(--serif);
+    font-size:24px;
+    line-height:1.3;
+    color:#F2ECDF;
+  }
+
+  /* ===================== CTA / QR ===================== */
+  section.cta{
+    padding: 120px 0;
+    background: var(--bg-alt);
+    border-top:1px solid var(--line);
+  }
+  .cta-grid{
+    display:grid;grid-template-columns: 1.1fr 0.9fr;gap:80px;align-items:center;
+  }
+  @media (max-width:920px){.cta-grid{grid-template-columns:1fr;gap:48px}}
+  .cta h2{
+    font-family:var(--serif);font-weight:400;
+    font-size: clamp(40px, 5vw, 72px);
+    line-height:1.05;letter-spacing:-0.02em;
+    max-width: 14ch;
+  }
+  .cta h2 em{font-style:italic;color:var(--ochre-dk)}
+  .cta p{
+    margin-top:24px;font-size:19px;color:var(--ink-soft);max-width:46ch;
+  }
+  .cta-bullets{
+    margin-top:32px;display:flex;flex-direction:column;gap:14px;
+  }
+  .cta-bullets li{
+    list-style:none;display:flex;gap:14px;align-items:flex-start;
+    font-size:16px;color:var(--ink);
+  }
+  .cta-bullets li svg{flex-shrink:0;margin-top:3px}
+
+  /* QR card */
+  .qr-card{
+    background:#fff;
+    border-radius:28px;
+    padding:36px;
+    box-shadow:
+      0 30px 80px rgba(31,27,20,0.14),
+      inset 0 0 0 1px var(--line);
+    text-align:center;
+    position:relative;
+    max-width:380px;
+    margin: 0 auto;
+  }
+  .qr-card::before{
+    content:"";
+    position:absolute;inset:14px;
+    border:1px dashed var(--line-strong);
+    border-radius:18px;
+    pointer-events:none;
+  }
+  .qr-card .wa-icon{
+    width:42px;height:42px;
+    background: #25D366;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;
+    color:#fff;
+  }
+  .qr-card h4{
+    font-family:var(--serif);
+    font-size:22px;font-weight:500;
+    color:var(--ink);
+  }
+  .qr-card .qr-box{
+    margin: 22px auto 18px;
+    width: 220px; height: 220px;
+    padding: 12px;
+    background:#FBF6EA;
+    border-radius: 14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .qr-card .qr-box > div, .qr-card .qr-box canvas, .qr-card .qr-box img{
+    border-radius:8px !important;
+  }
+  .qr-card .num{
+    font-family: ui-monospace, monospace;
+    font-size:14px;color:var(--ink-soft);
+    letter-spacing:0.04em;
+  }
+  .qr-card .helper{
+    margin-top:14px;
+    font-size:12px;color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    padding: 40px 0;
+    border-top:1px solid var(--line);
+    background: var(--bg);
+  }
+  footer .row{
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:16px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  footer .row .made{
+    font-family:var(--serif);font-style:italic;
+  }
+
+  /* ===================== ANIMATIONS ===================== */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* Ronda Solar — rayos rotando lento */
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+  .ronda-solar-rays{
+    transform-origin: 46px 50px;
+    animation: spin-slow 28s linear infinite;
+  }
+
+  /* Mark de marca (Ronda Solar reducida) en nav y footer */
+  .brand-mark{
+    width: 30px; height: 30px;
+    flex-shrink: 0;
+  }
+  .brand-mark.lg{width:40px;height:40px}
+
+  /* Hero visual: ahora es la Ronda Solar a escala grande */
+  .visual .stage .ronda-hero{
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 78%;
+    aspect-ratio: 1/1;
+  }
+  .visual .stage .ronda-hero svg{ width: 100%; height: 100%; display:block; }
+
+  /* Manifesto: kicker con el segundo tagline */
+  .manifesto-motto{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: #E5A24A;
+    text-transform: none;
+    margin-bottom: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .manifesto-motto::before{
+    content:"";
+    width: 40px; height: 1px;
+    background: rgba(229,162,74,0.6);
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav class="top">
+  <div class="wrap">
+    <div class="row">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="78" y="46" width="22" height="8" rx="2" fill="#1F1B14"/>
+          <rect x="94" y="44" width="6" height="12" rx="1" fill="#8C5A1C"/>
+          <circle cx="46" cy="50" r="42" fill="#6B4423"/>
+          <circle cx="46" cy="50" r="36" fill="#7B4F2B"/>
+          <circle cx="46" cy="50" r="28" fill="#3F2A18"/>
+          <circle cx="46" cy="50" r="24" fill="#515C36"/>
+          <circle cx="46" cy="50" r="10" fill="#E5A24A"/>
+          <circle cx="46" cy="50" r="6" fill="#B7782B"/>
+        </svg>
+        <span>Mate</span>
+      </div>
+      <ul>
+        <li><a href="#mateo">Mateo</a></li>
+        <li><a href="#features">Para qué sirve</a></li>
+        <li><a href="#manifesto">Manifiesto</a></li>
+        <li><a href="#sumate">Sumate</a></li>
+      </ul>
+      <a href="#sumate" class="pill">
+        Hablá con Mate
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="eyebrow"><span class="sun"></span> IA para el campo · hecho en Argentina</span>
+
+        <h1 class="headline">
+          El mate de la<br/>
+          <em>nueva generación</em><br/>
+          del campo.
+        </h1>
+
+        <p class="sub">
+          Mateo —para los amigos, <strong>Mate</strong>— es un agente de inteligencia artificial
+          que se sienta al lado del ingeniero agrónomo y del productor.
+          Ayuda a pensar la siembra, anotar el día, y cuidar lo que importa:
+          <em>la tierra, el rinde, y la gente que la trabaja.</em>
+        </p>
+
+        <div class="hero-actions">
+          <a href="#sumate" class="btn-primary">
+            Cebale el primero a Mate
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#features" class="btn-ghost">Ver qué hace</a>
+        </div>
+      </div>
+
+      <!-- Visual: Ronda Solar (logo) en grande, con rayos animados -->
+      <div class="visual reveal">
+        <div class="stage">
+          <div class="ronda-hero">
+            <svg viewBox="0 0 110 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- bombilla -->
+              <rect x="78" y="46" width="22" height="8" rx="2" fill="#1F1B14"/>
+              <rect x="94" y="44" width="6" height="12" rx="1" fill="#8C5A1C"/>
+              <!-- calabaza (anillos) -->
+              <circle cx="46" cy="50" r="42" fill="#6B4423"/>
+              <circle cx="46" cy="50" r="36" fill="#7B4F2B"/>
+              <circle cx="46" cy="50" r="28" fill="#3F2A18"/>
+              <circle cx="46" cy="50" r="24" fill="#515C36"/>
+              <!-- rayos giratorios -->
+              <g class="ronda-solar-rays" stroke="#E5A24A" stroke-width="2.2" stroke-linecap="round" fill="none">
+                <line x1="46" y1="34" x2="46" y2="40"/>
+                <line x1="46" y1="60" x2="46" y2="66"/>
+                <line x1="30" y1="50" x2="36" y2="50"/>
+                <line x1="56" y1="50" x2="62" y2="50"/>
+                <line x1="35" y1="39" x2="39" y2="43"/>
+                <line x1="53" y1="57" x2="57" y2="61"/>
+                <line x1="35" y1="61" x2="39" y2="57"/>
+                <line x1="53" y1="43" x2="57" y2="39"/>
+              </g>
+              <!-- sol central -->
+              <circle cx="46" cy="50" r="10" fill="#E5A24A"/>
+              <circle cx="46" cy="50" r="6" fill="#B7782B"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== STRIP ====== -->
+<div class="strip">
+  <div class="wrap">
+    <div class="row">
+      <span>Siembra</span>
+      <span class="sep"></span>
+      <span>Rotación</span>
+      <span class="sep"></span>
+      <span>Cuaderno de campo</span>
+      <span class="sep"></span>
+      <span>Decisiones</span>
+      <span class="sep"></span>
+      <span>Acompañamiento</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== CONOCÉ A MATEO ====== -->
+<section id="mateo" class="intro">
+  <div class="wrap">
+    <div class="intro-grid">
+      <div class="reveal">
+        <div class="section-label">Conocé a Mateo</div>
+        <h2 class="section-title">Soy <em>Mateo.</em><br/>Pero llamame Mate.</h2>
+      </div>
+      <div class="reveal">
+        <p>
+          Nací de una idea simple: en el campo, las mejores decisiones se toman
+          <strong>compartiendo un mate</strong>. Mirando el horizonte, escuchando al que sabe,
+          pensando en voz alta.
+        </p>
+        <p>
+          Soy ese compañero, pero con la memoria de miles de campañas, los datos del clima
+          al día, y la paciencia de quedarme a tu lado todo lo que haga falta.
+          Estoy para el ingeniero agrónomo que arma la estrategia, y para el que
+          camina el lote a las seis de la mañana.
+        </p>
+        <div class="quote">
+          "El campo no se entiende solo con datos.<br/>
+          Se entiende con tiempo, con oficio, y con alguien que te escuche."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FEATURES ====== -->
+<section id="features" class="features">
+  <div class="wrap">
+    <div class="features-head reveal">
+      <div>
+        <div class="section-label">Para qué sirve</div>
+        <h2 class="section-title">Dos <em>manos</em><br/>en la misma ronda.</h2>
+      </div>
+      <p>
+        Mate no es una app más con dashboards. Es una conversación.
+        Le hablás como le hablarías a un colega de confianza, y te responde
+        con criterio agronómico y memoria de tu campo.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <!-- FEATURE 1: ESTRATEGIA -->
+      <article class="feature reveal">
+        <div>
+          <div class="num">— 01</div>
+          <h3>Estrategia de <em>siembra</em> y rotación</h3>
+          <p class="desc">
+            Decidí qué sembrar, dónde y cuándo, con un asistente que cruza
+            datos de suelo, historial de tu lote, clima, y mercado.
+            Mate piensa la campaña con vos —no por vos.
+          </p>
+        </div>
+        <div class="demo">
+          <div class="bubble">
+            <span class="label">Vos</span>
+            <span class="me">¿Tiene sentido meter soja de 2da en el lote 14 este año?</span>
+          </div>
+          <div class="bubble">
+            <span class="label">Mate</span>
+            <span class="mate">Mirando el historial: venís de 3 campañas seguidas con soja ahí.
+            La materia orgánica está cayendo. Te tiraría más una gramínea —maíz tardío
+            si tenés agua, o sorgo si querés bajar riesgo. ¿Te armo el comparativo de margen?</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- FEATURE 2: CUADERNO DE CAMPO -->
+      <article class="feature reveal">
+        <div>
+          <div class="num">— 02</div>
+          <h3>Tu <em>cuaderno</em> de campo, siempre con vos</h3>
+          <p class="desc">
+            Anotá lo que hiciste hoy hablándole por WhatsApp.
+            Mate registra aplicaciones, recorridas, tareas y observaciones,
+            y te arma los reportes cuando los necesitás —para BPA, para el dueño, o para vos.
+          </p>
+        </div>
+        <div class="demo">
+          <div class="bubble">
+            <span class="label">Vos (audio)</span>
+            <span class="me">"Hoy apliqué glifosato 3 litros en el lote 7, viento del sur, 12 km/h, 8 de la mañana."</span>
+          </div>
+          <div class="bubble">
+            <span class="label">Mate</span>
+            <span class="mate">Anotado en el cuaderno del lote 7. Te dejo guardada la receta y las condiciones.
+            ¿Querés que arme el reporte semanal el viernes a la tarde?</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MANIFIESTO: TRADICIÓN + FUTURO ====== -->
+<section id="manifesto" class="manifesto">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="manifesto-motto">Tradición que aprende. Tecnología que acompaña.</div>
+      <h2>El campo <em>cambia</em>.<br/>La ronda, no.</h2>
+      <p>
+        Hace cien años, las decisiones del campo se tomaban alrededor de un mate y un mapa
+        en papel. Hoy se toman con sensores, satélites, y modelos de IA.
+        Pero la mejor decisión sigue siendo la que se piensa en compañía.
+        Mate trae lo nuevo, sin perder lo de siempre: el oficio, la prudencia, el rato compartido.
+      </p>
+    </div>
+
+    <div class="pair">
+      <div class="item reveal">
+        <div class="k">— Tradición</div>
+        <div class="v">Conocer el lote, leer el cielo, escuchar al peón viejo.</div>
+      </div>
+      <div class="item reveal">
+        <div class="k">— Tecnología</div>
+        <div class="v">Modelos de IA agronómicos, datos satelitales, memoria de cada campaña.</div>
+      </div>
+      <div class="item reveal">
+        <div class="k">— Mate</div>
+        <div class="v">Las dos cosas, en la misma conversación. Todos los días.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA / QR ====== -->
+<section id="sumate" class="cta">
+  <div class="wrap">
+    <div class="cta-grid">
+      <div class="reveal">
+        <div class="section-label">Sumate</div>
+        <h2>Empezá a tomar mate <em>con Mate.</em></h2>
+        <p>
+          Estamos abriendo el círculo. Si sos ingeniero agrónomo, productor,
+          o trabajás en el campo, escaneá el QR y empezá la conversación por WhatsApp.
+          Te respondemos en el día.
+        </p>
+        <ul class="cta-bullets">
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#515C36" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            Sin descargas. Hablás con Mate desde tu WhatsApp.
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#515C36" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            Acompañamiento personal del equipo en el alta.
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#515C36" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            Pensado para el ritmo del campo argentino.
+          </li>
+        </ul>
+      </div>
+
+      <div class="reveal">
+        <div class="qr-card">
+          <div class="wa-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <h4>Escaneá y empezá la conversación</h4>
+          <div class="qr-box" id="qr"></div>
+          <div class="num">+54 9 11 0000 0000</div>
+          <div class="helper">QR de demostración — reemplazar con número real</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:24px;height:24px">
+          <rect x="78" y="46" width="22" height="8" rx="2" fill="#1F1B14"/>
+          <rect x="94" y="44" width="6" height="12" rx="1" fill="#8C5A1C"/>
+          <circle cx="46" cy="50" r="42" fill="#6B4423"/>
+          <circle cx="46" cy="50" r="36" fill="#7B4F2B"/>
+          <circle cx="46" cy="50" r="28" fill="#3F2A18"/>
+          <circle cx="46" cy="50" r="24" fill="#515C36"/>
+          <circle cx="46" cy="50" r="10" fill="#E5A24A"/>
+          <circle cx="46" cy="50" r="6" fill="#B7782B"/>
+        </svg>
+        <span style="font-size:18px">Mate</span>
+      </div>
+      <div class="made">Hecho en Argentina, con tiempo y oficio · 2026</div>
+      <div>hola@mate.ai · Buenos Aires</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- QR de WhatsApp (placeholder) ----
+  // Reemplazar el número y el mensaje en la URL para producción.
+  const waUrl = "https://wa.me/5491100000000?text=" + encodeURIComponent("Hola Mate, quiero saber más.");
+  new QRCode(document.getElementById("qr"), {
+    text: waUrl,
+    width: 196,
+    height: 196,
+    colorDark: "#1F1B14",
+    colorLight: "#FBF6EA",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  // ---- Reveal on scroll ----
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
