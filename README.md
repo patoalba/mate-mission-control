@@ -11,11 +11,15 @@ Servido como página estática vía GitHub Pages.
 | **/** — `index.html` | Mission Control: panel de arquitectura, IAM, pipelines y secretos |
 | **/landing.html** | Landing pública del producto (marketing, value prop) |
 | **/roadmap.html** | Roadmap MVP + Coach Wave 1 con checkboxes y progreso |
+| **/privacy.html** | Política de Privacidad (requerida por Meta para publicar la app) |
+| **/terms.html** | Términos de Servicio |
 
 URLs en vivo:
 - https://patoalba.github.io/mate-mission-control/
 - https://patoalba.github.io/mate-mission-control/landing.html
 - https://patoalba.github.io/mate-mission-control/roadmap.html
+- https://patoalba.github.io/mate-mission-control/privacy.html
+- https://patoalba.github.io/mate-mission-control/terms.html
 
 ## Fuente de verdad
 
