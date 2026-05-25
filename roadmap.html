@@ -358,7 +358,7 @@
 </main>
 
 <script>
-const TODAY = new Date('2026-05-24');
+const TODAY = new Date('2026-05-25');
 const LAUNCH = new Date('2026-06-08');
 
 /* Una sola fuente de verdad: 4 fases, cada task tiene track (mvp|coach) y done inicial. */
@@ -406,6 +406,10 @@ const PHASES = [
       { t: 'mvp', d: true,  text: 'profile_populator crea Establishment + Plots + LogEntries' },
       { t: 'mvp', d: true,  text: 'wow_message para primer contacto personalizado' },
       { t: 'mvp', d: true,  text: '28 tests de onboarding verdes' },
+      { t: 'mvp', d: true,  text: 'Orquestador run_onboarding wirea drive_reader → extractor → populator → wow' },
+      { t: 'mvp', d: true,  text: 'Script smoke_onboarding.py (CLI con dry-run + SA desde Secret Manager)' },
+      { t: 'mvp', d: true,  text: 'Fixtures sintéticos de Drive (4 archivos: parte, lotes, suelo, historia)' },
+      { t: 'mvp', d: true,  text: '10 tests del orquestador verdes (38 total onboarding)' },
       { t: 'mvp', d: false, text: 'Smoke E2E con carpeta Drive real (cierra Gate A)' },
       { t: 'mvp', d: false, text: 'Hardening: fallback si ADK falla, retry con backoff WhatsApp' },
       { t: 'mvp', d: false, text: 'Alerta Cloud Logging: error rate > 5% en últimas 2h' },
